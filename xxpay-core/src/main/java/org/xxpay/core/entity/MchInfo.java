@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
-import org.xxpay.core.entity.BaseModel;
 import com.baomidou.mybatisplus.annotation.TableField;
 
 /**
@@ -139,24 +138,6 @@ public class MchInfo extends BaseModel<MchInfo> {
      */
     @TableField("SignStatus")
     private Byte signStatus;
-
-    /**
-     * 小程序对应的商户子角色
-     */
-    @TableField("MiniRole")
-    private Byte miniRole;
-
-    /**
-     * 小程序对应的商户对应的父节点Id
-     */
-    @TableField("ParentId")
-    private Long parentId;
-
-    /**
-     * 医院ID
-     */
-    @TableField("HospitalId")
-    private String hospitalId;
 
     /**
      * 是否支持押金模式:0-否,1-是
@@ -364,30 +345,6 @@ public class MchInfo extends BaseModel<MchInfo> {
         this.updateTime = updateTime;
     }
 
-    public Byte getMiniRole() {
-        return miniRole;
-    }
-
-    public void setMiniRole(Byte miniRole) {
-        this.miniRole = miniRole;
-    }
-
-    public Long getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
-    }
-
-    public String getHospitalId() {
-        return hospitalId;
-    }
-
-    public void setHospitalId(String hospitalId) {
-        this.hospitalId = hospitalId;
-    }
-
     @Override
     public String toString() {
         return "MchInfo{" +
@@ -411,9 +368,6 @@ public class MchInfo extends BaseModel<MchInfo> {
                 ", isvId=" + isvId +
                 ", status=" + status +
                 ", signStatus=" + signStatus +
-                ", miniRole=" + miniRole +
-                ", parentId=" + parentId +
-                ", hospitalId=" + hospitalId +
                 ", depositModeStatus=" + depositModeStatus +
                 ", auditInfo=" + auditInfo +
                 ", remark=" + remark +

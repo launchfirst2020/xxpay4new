@@ -121,7 +121,7 @@ public interface MchTradeOrderMapper extends BaseMapper<MchTradeOrder> {
     List<Map> countByGroupProductTypeForNc(Map condition);
 
     /** 根据商户ID统计产生交易的商户数 **/
-    Long countMchForTrade(@Param("mchIds") List<Long> mchIds);
+    Long countMchForTrade(@Param("hisUserIds") List<String> hisUserIds);
 
     //================================================结束新增修改纳呈支付=============================================================
 }

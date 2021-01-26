@@ -134,8 +134,11 @@ public class AuthController extends BaseController {
 
             //小程序返回自定义角色
             if ("uni-app".equals(loginType)) {
-                MchInfo mchInfo = rpcCommonService.rpcMchInfoService.findByLoginName(username);
-                data.put("miniRole", mchInfo != null ? mchInfo.getMiniRole() : null);
+                //MchInfo mchInfo = rpcCommonService.rpcMchInfoService.findByLoginName(username);
+                //data.put("miniRole", mchInfo != null ? mchInfo.getMiniRole() : null);
+                if (getUser().getMiniRole() != null) {
+                    data.put("miniRole", getUser().getMiniRole());
+                }
             }
 
             //记录首次工作时间

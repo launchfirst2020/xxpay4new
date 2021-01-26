@@ -18,7 +18,13 @@ public interface IMchTradeOrderBatchService extends IService<MchTradeOrderBatch>
     List<MchTradeOrderBatch> selectDataTrendForMonth(Map condition);
 
     /**  按天统计数据 **/
-    public MchTradeOrderBatch selectDataTrendByDay(Map condition);
+    MchTradeOrderBatch selectDataTrendByDay(Map condition);
+
+    /** 结算列表 **/
+    List<MchTradeOrderBatch> selectTotalByDay(Map condition);
+
+    /** 结算列表记录数 **/
+    Long countTotalByDay(Map condition);
 
     /** 按月份统计数据**/
     public MchTradeOrderBatch selectDataTrendByMonth(Map condition);

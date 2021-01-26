@@ -17,8 +17,15 @@ public interface MchTradeOrderBatchMapper extends BaseMapper<MchTradeOrderBatch>
 
     List<MchTradeOrderBatch> selectDataTrendForMonth(Map condition);
 
+    //结算列表
+    List<MchTradeOrderBatch> selectTotalByDay(Map condition);
+
+    //结算列表记录总数
+    Long countTotalByDay(Map conditon);
+
     //按日期查找跑批表
     MchTradeOrderBatch selectDataTrendByDay(Map condition);
+
 
     //按月份查找跑批表
     MchTradeOrderBatch selectDataTrendByMonth(Map condition);

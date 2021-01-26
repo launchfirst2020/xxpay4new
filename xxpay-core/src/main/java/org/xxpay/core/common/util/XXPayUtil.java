@@ -912,6 +912,29 @@ public class XXPayUtil {
     /** 封装公共查询条件 (用于统计数据) */
     public static Map packageDataCommonCondition(Date beginTime, Date endTime,
                                                  Long isvId, Long agentId, List<Long> agentIdList, Long mchId,
+                                                 Long storeId, Long operatorId, Byte productType, Integer provinceCode, Integer cityCode,
+                                                 String hisUserId, Integer areaCode, Long hospitalId){
+        Map commonCondition = new HashMap();
+        commonCondition.put("beginTime", beginTime);  //查询开始时间
+        commonCondition.put("endTime", endTime);  //查询结束时间
+        commonCondition.put("isvId", isvId);  //服务商ID
+        commonCondition.put("agentId", agentId);  //代理商ID
+        commonCondition.put("agentIdList", agentIdList);  //代理商ID LIST
+        commonCondition.put("mchId", mchId);  //商户ID
+        commonCondition.put("storeId", storeId);  //门店ID
+        commonCondition.put("operatorId", operatorId);  //操作员ID
+        commonCondition.put("productType", productType);  //产品类型
+        commonCondition.put("provinceCode", provinceCode);  //查询省
+        commonCondition.put("cityCode", cityCode);  //查询市
+        commonCondition.put("hisUserId", hisUserId);  //收银员
+        commonCondition.put("hospitalId", hospitalId);  //医院ID
+        commonCondition.put("areaCode", areaCode);  //县区码
+        return commonCondition;
+    }
+
+    /** 封装公共查询条件 (用于统计数据) */
+    public static Map packageDataCommonCondition(Date beginTime, Date endTime,
+                                                 Long isvId, Long agentId, List<Long> agentIdList, Long mchId,
                                                  Long storeId, Long operatorId, Byte productType, Integer provinceCode, Integer cityCode){
         Map commonCondition = new HashMap();
         commonCondition.put("beginTime", beginTime);  //查询开始时间

@@ -386,6 +386,18 @@ public class MchTradeOrder extends BaseModel {
     private String imgPathMain;
 
     /**
+     * 医院ID
+     */
+    @TableField("HospitalId")
+    private Long hospitalId;
+
+    /**
+     * his操作用户ID
+     */
+    @TableField("HisUserId")
+    private String hisUserId;
+
+    /**
      * 备注
      */
     @TableField("Remark")
@@ -408,6 +420,22 @@ public class MchTradeOrder extends BaseModel {
      */
     @TableField("UpdateTime")
     private Date updateTime;
+
+    public Long getHospitalId() {
+        return hospitalId;
+    }
+
+    public void setHospitalId(Long hospitalId) {
+        this.hospitalId = hospitalId;
+    }
+
+    public String getHisUserId() {
+        return hisUserId;
+    }
+
+    public void setHisUserId(String hisUserId) {
+        this.hisUserId = hisUserId;
+    }
 
     private String channelOrderNo;
 
@@ -939,6 +967,8 @@ public class MchTradeOrder extends BaseModel {
                 ", returnDesc=" + returnDesc +
                 ", goodsDesc=" + goodsDesc +
                 ", imgPathMain=" + imgPathMain +
+                ", hospitalId=" + hospitalId +
+                ", hisUserId=" + hisUserId +
                 ", remark=" + remark +
                 ", postPrice=" + postPrice +
                 ", createTime=" + createTime +

@@ -79,12 +79,19 @@ public class MchTradeOrderBatchServiceImpl extends ServiceImpl<MchTradeOrderBatc
     }
 
     @Override
+    public List<MchTradeOrderBatch> selectTotalByDay(Map condition) {
+        return mchTradeOrderBatchMapper.selectTotalByDay(condition);
+    }
+
+    @Override
+    public Long countTotalByDay(Map condition) {
+        return mchTradeOrderBatchMapper.countTotalByDay(condition);
+    }
+
+    @Override
     public MchTradeOrderBatch selectDataTrendByMonth(Map condition) {
         return mchTradeOrderBatchMapper.selectDataTrendByMonth(condition);
     }
-
-
-
 
     /** 生成[wrapper]查询条件 **/
     private LambdaQueryWrapper<MchTradeOrderBatch> getQueryWrapper(MchTradeOrderBatch mchTradeOrderBatch){

@@ -24,9 +24,6 @@
     <result column="IsvId" property="isvId" />
     <result column="Status" property="status" />
     <result column="SignStatus" property="signStatus" />
-    <result column="MiniRole" property="miniRole" />
-    <result column="ParentId" property="parentId" />
-    <result column="HospitalId" property="hospitalId" />
     <result column="DepositModeStatus" property="depositModeStatus" />
     <result column="AuditInfo" property="auditInfo" />
     <result column="Remark" property="remark" />

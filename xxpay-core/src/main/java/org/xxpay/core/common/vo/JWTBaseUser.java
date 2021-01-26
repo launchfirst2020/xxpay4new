@@ -45,6 +45,10 @@ public class JWTBaseUser extends SysUser implements UserDetails {
             this.setWorkStatus(sysUser.getWorkStatus());
             this.setWorkStartTime(sysUser.getWorkStartTime());
             this.setLastPasswordResetTime(sysUser.getLastPasswordResetTime());
+            this.setMiniRole(sysUser.getMiniRole());
+            this.setHospitalId(sysUser.getHospitalId());
+            this.setHisUserId(sysUser.getHisUserId());
+            this.setAreaCode(sysUser.getAreaCode());
             this.setCreateTime(sysUser.getCreateTime());
             this.setUpdateTime(sysUser.getUpdateTime());
 

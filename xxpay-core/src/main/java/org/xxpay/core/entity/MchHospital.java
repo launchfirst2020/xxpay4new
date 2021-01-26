@@ -13,7 +13,7 @@ public class MchHospital implements Serializable {
      * @mbggenerated
      */
     @TableField("HospitalId")
-    private String hospitalId;
+    private Long hospitalId;
 
     /**
      * 医院名称
@@ -73,11 +73,11 @@ public class MchHospital implements Serializable {
     @TableField("UpdateTime")
     private Date updateTime;
 
-    public String getHospitalId() {
+    public Long getHospitalId() {
         return hospitalId;
     }
 
-    public void setHospitalId(String hospitalId) {
+    public void setHospitalId(Long hospitalId) {
         this.hospitalId = hospitalId;
     }
 

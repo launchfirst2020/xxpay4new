@@ -159,7 +159,7 @@ public interface IMchTradeOrderService extends IService<MchTradeOrder> {
     List<Map> countByGroupProductTypeForNc(Map condition);
 
     /**  根据商户ID统计产生交易的商户数 **/
-    Long countMchForTrade(List<Long> mchIds);
+    Long countMchForTrade(List<String> hisUsers);
 
     //===================================================================结束纳呈支付新增=====================================================================
 }

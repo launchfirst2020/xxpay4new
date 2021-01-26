@@ -122,7 +122,7 @@ public class MchTradeOrderServiceImpl extends ServiceImpl<MchTradeOrderMapper, M
         return mchTradeOrderMapper.selectByExample(example);
     }
 
-    /** 纳呈修改  **/
+    /** 开始纳呈修改  **/
     @Override
     public List<MchTradeOrder> selectPlus(int pageIndex, int pageSize, MchTradeOrder mchTradeOrder, Date createTimeStart, Date createTimeEnd) {
         MchTradeOrderExample example = new MchTradeOrderExample();
@@ -133,6 +133,8 @@ public class MchTradeOrderServiceImpl extends ServiceImpl<MchTradeOrderMapper, M
         setCriteria(criteria, mchTradeOrder, createTimeStart, createTimeEnd);
         return mchTradeOrderMapper.selectPlusByExample(example);
     }
+
+    /** 结束纳呈修改**/
 
     @Override
     public List<MchTradeOrder> selectByExampleWithBLOBs(int pageIndex, int pageSize, MchTradeOrder mchTradeOrder, Date createTimeStart, Date createTimeEnd) {
@@ -1351,11 +1353,11 @@ public class MchTradeOrderServiceImpl extends ServiceImpl<MchTradeOrderMapper, M
     }
 
     @Override
-    public Long countMchForTrade(List<Long> mchIds) {
-        if (CollectionUtils.isEmpty(mchIds)) {
+    public Long countMchForTrade(List<String> hisUserIds) {
+        if (CollectionUtils.isEmpty(hisUserIds)) {
             return null;
         }
-        return mchTradeOrderMapper.countMchForTrade(mchIds);
+        return mchTradeOrderMapper.countMchForTrade(hisUserIds);
     }
 
     //===================================================================结束纳呈支付新增=====================================================================

@@ -132,6 +132,30 @@ public class SysUser extends BaseModel<SysUser> {
     private Date lastPasswordResetTime;
 
     /**
+     * 小程序对应的商户子角色
+     */
+    @TableField("MiniRole")
+    private Byte miniRole;
+
+    /**
+     * 县区码
+     */
+    @TableField("AreaCode")
+    private Integer areaCode;
+
+    /**
+     * 医院ID
+     */
+    @TableField("HospitalId")
+    private Long hospitalId;
+
+    /**
+     *
+     */
+    @TableField("HisUserId")
+    private String hisUserId;
+
+    /**
      * 创建时间
      */
     @TableField("CreateTime")
@@ -291,6 +315,38 @@ public class SysUser extends BaseModel<SysUser> {
         this.updateTime = updateTime;
     }
 
+    public Byte getMiniRole() {
+        return miniRole;
+    }
+
+    public void setMiniRole(Byte miniRole) {
+        this.miniRole = miniRole;
+    }
+
+    public Integer getAreaCode() {
+        return areaCode;
+    }
+
+    public void setAreaCode(Integer areaCode) {
+        this.areaCode = areaCode;
+    }
+
+    public Long getHospitalId() {
+        return hospitalId;
+    }
+
+    public void setHospitalId(Long hospitalId) {
+        this.hospitalId = hospitalId;
+    }
+
+    public String getHisUserId() {
+        return hisUserId;
+    }
+
+    public void setHisUserId(String hisUserId) {
+        this.hisUserId = hisUserId;
+    }
+
     @Override
     public String toString() {
         return "MgrSysUser{" +
@@ -313,6 +369,10 @@ public class SysUser extends BaseModel<SysUser> {
                 ", lastLoginTime=" + lastLoginTime +
                 ", lastLoginIp=" + lastLoginIp +
                 ", lastPasswordResetTime=" + lastPasswordResetTime +
+                ", miniRole=" + miniRole +
+                ", areaCode=" + areaCode +
+                ", hospitalId=" + hospitalId +
+                ", hisUserId=" + hisUserId +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 "}";

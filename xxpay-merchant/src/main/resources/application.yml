@@ -83,4 +83,8 @@ sqlit:
   file:
     path: jdbc:sqlite:@sqlit.file.path@
 
+logging:
+  level:
+    org.xxpay.service.dao.mapper: debug
+
 

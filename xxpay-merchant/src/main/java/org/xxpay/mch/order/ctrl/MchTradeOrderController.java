@@ -268,22 +268,39 @@ public class MchTradeOrderController extends BaseController {
     @RequestMapping("/nc/list")
     @ResponseBody
     public ResponseEntity<?> listForNc() {
-
-        MchTradeOrder mchTradeOrder = getObject( MchTradeOrder.class);
-        if(mchTradeOrder == null) mchTradeOrder = new MchTradeOrder();
-        mchTradeOrder.setMchId(getUser().getBelongInfoId());
-
-        if(getUser().getIsSuperAdmin() == MchConstant.PUB_NO){ //商户子操作员
-
-            MchStore mchStore = rpcCommonService.rpcMchStoreService.getById(getUser().getStoreId());
-            mchTradeOrder.setStoreNo(mchStore.getStoreNo());
-            mchTradeOrder.setStoreId(mchStore.getStoreId());
-        }
+        MchTradeOrder mchTradeOrder = getObject(MchTradeOrder.class);
+        if (mchTradeOrder == null) mchTradeOrder = new MchTradeOrder();
 
         // 订单起止时间
         Date[] queryDate = getQueryDateRange();
         Date createTimeStart = queryDate[0];
-        Date createTimeEnd =  queryDate[1];
+        Date createTimeEnd = queryDate[1];
+
+        //小程序子角色
+        byte miniRole = getUser().getMiniRole();
+        if (miniRole == MchConstant.MCH_MINI_ROLE_CASHIER) {  //收银员
+            String hisUserId = getUser().getHisUserId();
+            if (StringUtils.isBlank(hisUserId)) {
+                return ResponseEntity.ok(XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_USER_ID_REQUIRED));
+            }
+            mchTradeOrder.setHisUserId(hisUserId);
+        } else if (miniRole == MchConstant.MCH_MINI_ROLE_MCHCHANT_ADMIN) {  //商户管理员
+            Long hospitalId = getUser().getHospitalId();
+            if (hospitalId == null) {
+                return ResponseEntity.ok(XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_HOSPITALID_REQUIRED));
+            }
+            mchTradeOrder.setHospitalId(hospitalId);
+        } else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) { // 卫健委
+            Integer areaCode = getUser().getAreaCode();
+            if (areaCode == null) {
+                return ResponseEntity.ok(XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_AREACODE_REQUIRED));
+            }
+            mchTradeOrder.setAreaCode(areaCode);
+        } else if (miniRole == MchConstant.MCH_MINI_ROLE_PLATFORM_OPERATORS) { //运营平台
+            //运营平台查询所有
+        } else {
+            return ResponseEntity.ok(XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_ROLE_ERROR));
+        }
 
         long count = rpcCommonService.rpcMchTradeOrderService.count(mchTradeOrder, createTimeStart, createTimeEnd);
         if(count == 0) return ResponseEntity.ok(XxPayPageRes.buildSuccess());
@@ -305,17 +322,42 @@ public class MchTradeOrderController extends BaseController {
      */
     @RequestMapping("/nc/listBatch")
     @ResponseBody
-    public PageRes listBatchForNc() {
-        Long mchId = getValLongRequired( "mchId");
-        MchTradeOrderBatch mchTradeOrderBatch = getObject( MchTradeOrderBatch.class);
-        if(mchTradeOrderBatch == null) mchTradeOrderBatch = new MchTradeOrderBatch();
-        mchTradeOrderBatch.setMchId(mchId);
-        IPage<MchTradeOrderBatch> result = rpcCommonService.rpcMchTradeOrderBatchService.selectPage(getIPage(), mchTradeOrderBatch);
-        return PageRes.buildSuccess(result);
+    public ResponseEntity<?> listBatchForNc() {
+        byte miniRole = getUser().getMiniRole();
+
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        if (miniRole == MchConstant.MCH_MINI_ROLE_MCHCHANT_ADMIN) { //商户管理员
+            Long hospitalId = getUser().getHospitalId();
+            if (hospitalId == null) {
+                return ResponseEntity.ok(XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_HOSPITALID_REQUIRED));
+            }
+            paramMap.put("hospitalId", hospitalId);
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) { //卫健委
+            Integer areaCode = getUser().getAreaCode();
+            if (areaCode == null) {
+                return ResponseEntity.ok(XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_AREACODE_REQUIRED));
+            }
+            paramMap.put("areaCode", areaCode);
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {  //运营平台
+            //运营平台管理员查看所有的
+        }else {
+            return ResponseEntity.ok(XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_BATCH_VIEW_ROLE_ERR));
+        }
+
+        paramMap.put("offset", (getPageIndex() -1) * getPageSize());
+        paramMap.put("limit", getPageSize());
+
+        Long count = rpcCommonService.rpcMchTradeOrderBatchService.countTotalByDay(paramMap);
+        if(count == 0) {
+            return ResponseEntity.ok(XxPayPageRes.buildSuccess());
+        }
+        List<MchTradeOrderBatch> result = rpcCommonService.rpcMchTradeOrderBatchService.selectTotalByDay(paramMap);
+
+        return ResponseEntity.ok(XxPayPageRes.buildSuccess(result, count));
     }
 
     /**
-     * 结算列表(按日)
+     * 新增结算(按日)
      * @return
      */
     @RequestMapping("/nc/addBatch")
@@ -323,8 +365,6 @@ public class MchTradeOrderController extends BaseController {
     public XxPayResponse addBatchForNc() {
 
         MchTradeOrderBatch mchTradeOrderBatch = getObject( MchTradeOrderBatch.class);
-
-        //if(mchTradeOrderBatch == null) mchTradeOrderBatch = new MchTradeOrderBatch();
 
         mchTradeOrderBatch.setBatchTaskStatus(MchConstant.STATUS_OK);
 
@@ -339,12 +379,29 @@ public class MchTradeOrderController extends BaseController {
     @RequestMapping("/nc/selectMchBatch")
     @ResponseBody
     public XxPayResponse selectMchBatch() {
+        String batchDate = getValStringRequired("batchDate");
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("batchDate", batchDate);
+        byte miniRole = getUser().getMiniRole();
+        if (miniRole == MchConstant.MCH_MINI_ROLE_MCHCHANT_ADMIN) { //商户管理员
+            Long hospitalId = getUser().getHospitalId();
+            if (hospitalId == null) {
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_HOSPITALID_REQUIRED);
+            }
+            paramMap.put("hospitalId", hospitalId);
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {  //卫健委
+            Integer areaCode = getUser().getAreaCode();
+            if (areaCode == null) {
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_AREACODE_REQUIRED);
+            }
+            paramMap.put("areaCode", areaCode);
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {  //运营平台
+            //运营平台管理员查看所有的
+        }else {
+            return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_BATCH_VIEW_ROLE_ERR);
+        }
 
-        Long mchId = getValLongRequired( "mchId");
-        String batchDate = this.getValStringRequired("batchDate");
-
-        MchTradeOrderBatch mchTradeOrderBatch = rpcCommonService.rpcMchTradeOrderBatchService.getOneMchTradeOrderBatch(batchDate, mchId);
-
+        MchTradeOrderBatch mchTradeOrderBatch = rpcCommonService.rpcMchTradeOrderBatchService.selectDataTrendByDay(paramMap);
         return XxPayResponse.buildSuccess(mchTradeOrderBatch);
     }
 
@@ -356,12 +413,33 @@ public class MchTradeOrderController extends BaseController {
     @ResponseBody
     public XxPayResponse selectMchBatchMonth() {
 
-        Long mchId = getValLongRequired( "mchId");
-        String batchDate = this.getValStringRequired("batchDate");
+        String payMonth = this.getValStringRequired("payMonth");
 
-        MchTradeOrderBatchMonth mchTradeOrderBatchMonth = rpcCommonService.rpcMchTradeOrderBatchMonthService.getOneMchTradeOrderBatchMonth(batchDate, mchId);
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        byte miniRole = getUser().getMiniRole();
+        paramMap.put("payMonth", payMonth);  //月份, 格式: yyyy-MM
+        if (miniRole == MchConstant.MCH_MINI_ROLE_MCHCHANT_ADMIN) {  //商户管理员
+            Long hospitalId = getUser().getHospitalId();
+            if (hospitalId == null) {
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_HOSPITALID_REQUIRED);
+            }
+            paramMap.put("hospitalId", hospitalId);
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {  //卫健委
+            Integer areaCode = getUser().getAreaCode();
+            if (areaCode == null) {
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_AREACODE_REQUIRED);
+            }
+            paramMap.put("areaCode", areaCode);
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
+            //运营平台管理员查看所有的
+        }else {
+            return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_BATCH_VIEW_ROLE_ERR);
+        }
 
-        return XxPayResponse.buildSuccess(mchTradeOrderBatchMonth);
+        //指定日期的统计数据
+        MchTradeOrderBatch monthTotal = rpcCommonService.rpcMchTradeOrderBatchService.selectDataTrendByMonth(paramMap);
+
+        return XxPayResponse.buildSuccess(monthTotal);
     }
 
     /**
@@ -390,19 +468,22 @@ public class MchTradeOrderController extends BaseController {
     @RequestMapping("/nc/listMchInfo")
     @ResponseBody
     public PageRes listMchInfoForNc() {
-
-        MchInfo mchInfo = getObject(MchInfo.class);
-
-        //mchInfo.setIsvId(getUser().getBelongInfoId()); //查找该服务商下的商户
-
-        IPage<MchInfo> result = rpcCommonService.rpcMchInfoService.selectPage(getIPage(), mchInfo);
-        List<MchInfo> list = result.getRecords();
-        if (CollectionUtils.isNotEmpty(list)) {
-            for (MchInfo mi : list) {
-                mi.setPrivateKey("-");
-                mi.setRegisterPassword("-");
-            }
+        MchHospital mchHospital = getObject(MchHospital.class);
+        if (mchHospital == null) {
+            mchHospital = new MchHospital();
         }
+
+        byte miniRole = getUser().getMiniRole();
+        if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) { //卫健委
+            mchHospital.setAreaCode(getUser().getAreaCode());
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_PLATFORM_OPERATORS) {  //平台运营商
+            //查询所有的
+        } else {
+            return null;
+        }
+
+        IPage<MchHospital> result = rpcCommonService.rpcMchHospitalService.selectPage(getIPage(), mchHospital);
+        List<MchHospital> list = result.getRecords();
         return PageRes.buildSuccess(result);
     }
 
@@ -410,18 +491,11 @@ public class MchTradeOrderController extends BaseController {
     @ResponseBody
     public XxPayResponse countMchInfoTradeForNc() {
 
-        //获取当前登录商户ID
-        Long mchId = getUser().getBelongInfoId();
-
-        MchInfo mchInfo = rpcCommonService.rpcMchInfoService.findByMchId(mchId);
-        if (mchInfo == null) {
-            return XxPayResponse.buildErr("商户不存在");
-        }
 
         //商户角色
-        byte role = mchInfo.getMiniRole();
-        if (!(role == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION || role == MchConstant.MCH_MINI_ROLE_PLATFORM_OPERATORS)) {
-            return XxPayResponse.buildErr("角色为卫健委与平台运行商角色才能查询统计");
+        byte miniRole = getUser().getMiniRole();
+        if (!(miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION || miniRole == MchConstant.MCH_MINI_ROLE_PLATFORM_OPERATORS)) {
+            return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_SUPER_ADMIN_ROLE_ERR);
         }
 
         //签约管辖医院数
@@ -431,37 +505,35 @@ public class MchTradeOrderController extends BaseController {
         //产生交易的医院数
         Long tradeHispitalCounter = 0l;
 
-
-        List<MchInfo> mchInfos = new ArrayList<MchInfo>();
+        List<SysUser> sysUsers = new ArrayList<SysUser>();
         //卫健委角色
-        if (role == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
-            LambdaQueryWrapper<MchInfo> lambdaQueryWrapperByMch = new QueryWrapper<MchInfo>().lambda();
-            lambdaQueryWrapperByMch.eq(MchInfo::getParentId, mchId);
-            lambdaQueryWrapperByMch.isNotNull(MchInfo::getHospitalId);
+        if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
+            LambdaQueryWrapper<SysUser> lambdaQueryWrapperByMch = new QueryWrapper<SysUser>().lambda();
+            lambdaQueryWrapperByMch.eq(SysUser::getAreaCode, getUser().getAreaCode());
+            lambdaQueryWrapperByMch.isNotNull(SysUser::getHospitalId);
             //查询所有的子节点
-            mchInfos = rpcCommonService.rpcMchInfoService.list(lambdaQueryWrapperByMch);
-            if (CollectionUtils.isNotEmpty(mchInfos)) {
-                //查找当前卫健委下的所有医院管理员和收银员对应的mchId
-                List<Long> mchIds = mchInfos.stream().map(MchInfo::getMchId).distinct().collect(Collectors.toList());
+            sysUsers = rpcCommonService.rpcSysService.list(lambdaQueryWrapperByMch);
+            if (CollectionUtils.isNotEmpty(sysUsers)) {
+                //查找当前卫健委下的所有医院管理员和收银员对应的hisUserIds
+                List<String> hisUserIds = sysUsers.stream().map(SysUser::getHisUserId).distinct().collect(Collectors.toList());
                 //签约管辖医院
-                List<String> hospitalIds = mchInfos.stream().map(MchInfo::getHospitalId).distinct().collect(Collectors.toList());
+                List<Long> hospitalIds = sysUsers.stream().map(SysUser::getHospitalId).distinct().collect(Collectors.toList());
                 signCounter = CollectionUtils.isEmpty(hospitalIds) ? 0l : hospitalIds.size();
 
                 //产生交易医院数
-                tradeHispitalCounter =  rpcCommonService.rpcMchTradeOrderService.countMchForTrade(mchIds);
+                tradeHispitalCounter =  rpcCommonService.rpcMchTradeOrderService.countMchForTrade(hisUserIds);
                 tradeHispitalCounter = (tradeHispitalCounter == null ? 0l : tradeHispitalCounter);
 
             }
         }
-
         //平台运营商
-        if (role == MchConstant.MCH_MINI_ROLE_PLATFORM_OPERATORS) {
-            LambdaQueryWrapper<MchInfo> lambdaQueryWrapperByMch = new QueryWrapper<MchInfo>().lambda();
-            lambdaQueryWrapperByMch.isNotNull(MchInfo::getHospitalId);
-            mchInfos = rpcCommonService.rpcMchInfoService.list(lambdaQueryWrapperByMch);
-            if (CollectionUtils.isNotEmpty(mchInfos)) {
+        else if (miniRole == MchConstant.MCH_MINI_ROLE_PLATFORM_OPERATORS) {
+            LambdaQueryWrapper<SysUser> lambdaQueryWrapperByMch = new QueryWrapper<SysUser>().lambda();
+            lambdaQueryWrapperByMch.isNotNull(SysUser::getHospitalId);
+            sysUsers = rpcCommonService.rpcSysService.list(lambdaQueryWrapperByMch);
+            if (CollectionUtils.isNotEmpty(sysUsers)) {
                 //签约管辖医院
-                List<String> hospitalIds = mchInfos.stream().map(MchInfo::getHospitalId).distinct().collect(Collectors.toList());
+                List<Long> hospitalIds = sysUsers.stream().map(SysUser::getHospitalId).distinct().collect(Collectors.toList());
                 signCounter = CollectionUtils.isEmpty(hospitalIds) ? 0l : hospitalIds.size();
 
                 //产生交易医院数

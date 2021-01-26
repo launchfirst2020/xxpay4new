@@ -897,17 +897,9 @@ public class DataController extends BaseController {
     @RequestMapping("/nc/dataStatistics")
     public XxPayResponse dataStatisticsForNc() {
 
-        //查询商户ID
-        Long queryMchId = getUser().getBelongInfoId();
 
         //查询门店ID
         Long queryStoreId = null;
-        /*
-        Long queryStoreId = getValLong("queryStoreId");
-        if(getUser().getIsSuperAdmin() != MchConstant.PUB_YES){  //非商户本身， 仅查询当前门店， 否则支持切换门店
-            queryStoreId = getUser().getStoreId();
-        }
-        */
 
         //查询操作员
         Long queryOperatorId = getValLong("queryOperatorId");
@@ -933,8 +925,34 @@ public class DataController extends BaseController {
 
         Date[] queryDate = new Date[]{resultBeginDateTime, resultEndDateTime};
 
+        String hisUserId = null;  //his收银员
+        Integer areaCode = null;  //县区码
+        Long hospitalId = null;  //医院ID
+
+        byte miniRole = getUser().getMiniRole();
+        if (miniRole == MchConstant.MCH_MINI_ROLE_CASHIER) {  //收银员
+            hisUserId = getUser().getHisUserId();
+            if (StringUtils.isBlank(hisUserId)) {
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_USER_ID_REQUIRED);
+            }
+        } else if (miniRole == MchConstant.MCH_MINI_ROLE_MCHCHANT_ADMIN) {  //商户管理员
+            hospitalId = getUser().getHospitalId();
+            if (hospitalId == null) {
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_HOSPITALID_REQUIRED);
+            }
+        } else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) { // 卫健委
+            areaCode = getUser().getAreaCode();
+            if (areaCode == null) {
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_AREACODE_REQUIRED);
+            }
+        } else if (miniRole == MchConstant.MCH_MINI_ROLE_PLATFORM_OPERATORS) { //运营平台
+            //运营平台查询所有
+        } else {
+            return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_ROLE_ERROR);
+        }
+
         //公共查询条件
-        Map commonCondition = XXPayUtil.packageDataCommonCondition(queryDate[0], queryDate[1], null, null, null, queryMchId, queryStoreId, queryOperatorId, queryProductType, null, null);
+        Map commonCondition = XXPayUtil.packageDataCommonCondition(queryDate[0], queryDate[1], null, null, null, null, null, null, queryProductType, null, null, hisUserId, areaCode, hospitalId);
 
         //返回的统计数据
         Map<String, Object> resultMap = new HashMap<>();
@@ -992,20 +1010,23 @@ public class DataController extends BaseController {
     public XxPayResponse dataStatisticsForNcHour() {
 
         String batchDate = getValStringRequired("batchDate");
-        Long mchId = getValLong("mchId");
-
-        MchInfo mchInfo = rpcCommonService.rpcMchInfoService.findByMchId(mchId);
-        if (mchInfo == null) {
-            return XxPayResponse.build(RetEnum.RET_HIS_MCHID_REQUIRED);
-        }
 
         Map<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put("batchDate", batchDate);
-        if (mchInfo.getMiniRole() == MchConstant.MCH_MINI_ROLE_MCHCHANT_ADMIN) {
-            paramMap.put("hospitalId", mchInfo.getHospitalId());
-        }else if (mchInfo.getMiniRole() == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
-            paramMap.put("areaCode", mchInfo.getAreaCode());
-        }else if (mchInfo.getMiniRole() == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
+        byte miniRole = getUser().getMiniRole();
+        if (miniRole == MchConstant.MCH_MINI_ROLE_MCHCHANT_ADMIN) {
+            Long hospitalId = getUser().getHospitalId();
+            if (hospitalId == null) {
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_HOSPITALID_REQUIRED);
+            }
+            paramMap.put("hospitalId", hospitalId);
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
+            Integer areaCode = getUser().getAreaCode();
+            if (areaCode == null) {
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_AREACODE_REQUIRED);
+            }
+            paramMap.put("areaCode", areaCode);
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
             //运营平台管理员查看所有的
         }else {
             return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_BATCH_VIEW_ROLE_ERR);
@@ -1224,20 +1245,23 @@ public class DataController extends BaseController {
     public XxPayResponse dataStatisticsForNcDay() {
 
         String payDate = getValStringRequired("payDate");
-        Long mchId = getValLong("mchId");
-
-        MchInfo mchInfo = rpcCommonService.rpcMchInfoService.findByMchId(mchId);
-        if (mchInfo == null) {
-            return XxPayResponse.build(RetEnum.RET_HIS_MCHID_REQUIRED);
-        }
 
         Map<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put("payDate", payDate);
-        if (mchInfo.getMiniRole() == MchConstant.MCH_MINI_ROLE_MCHCHANT_ADMIN) {
-            paramMap.put("hospitalId", mchInfo.getHospitalId());
-        }else if (mchInfo.getMiniRole() == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
-            paramMap.put("areaCode", mchInfo.getAreaCode());
-        }else if (mchInfo.getMiniRole() == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
+        byte miniRole = getUser().getMiniRole();
+        if (miniRole == MchConstant.MCH_MINI_ROLE_MCHCHANT_ADMIN) {
+            Long hospitalId = getUser().getHospitalId();
+            if (hospitalId == null) {
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_HOSPITALID_REQUIRED);
+            }
+            paramMap.put("hospitalId", hospitalId);
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
+            Integer areaCode = getUser().getAreaCode();
+            if (areaCode == null) {
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_AREACODE_REQUIRED);
+            }
+            paramMap.put("areaCode", areaCode);
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
             //运营平台管理员查看所有的
         }else {
             return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_BATCH_VIEW_ROLE_ERR);
@@ -1303,20 +1327,22 @@ public class DataController extends BaseController {
     public XxPayResponse dataTotalForNcDay() {
 
         String payDate = getValStringRequired("payDate");
-        Long mchId = getValLong("mchId");
-
-        MchInfo mchInfo = rpcCommonService.rpcMchInfoService.findByMchId(mchId);
-        if (mchInfo == null) {
-            return XxPayResponse.build(RetEnum.RET_HIS_MCHID_REQUIRED);
-        }
-
         Map<String, Object> paramMap = new HashMap<String, Object>();
+        byte miniRole = getUser().getMiniRole();
         paramMap.put("payDate", payDate);
-        if (mchInfo.getMiniRole() == MchConstant.MCH_MINI_ROLE_MCHCHANT_ADMIN) {
-            paramMap.put("hospitalId", mchInfo.getHospitalId());
-        }else if (mchInfo.getMiniRole() == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
-            paramMap.put("areaCode", mchInfo.getAreaCode());
-        }else if (mchInfo.getMiniRole() == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
+        if (miniRole == MchConstant.MCH_MINI_ROLE_MCHCHANT_ADMIN) {
+            Long hospitalId = getUser().getHospitalId();
+            if (hospitalId == null) {
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_HOSPITALID_REQUIRED);
+            }
+            paramMap.put("hospitalId", hospitalId);
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
+            Integer areaCode = getUser().getAreaCode();
+            if (areaCode == null) {
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_AREACODE_REQUIRED);
+            }
+            paramMap.put("areaCode", areaCode);
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
             //运营平台管理员查看所有的
         }else {
             return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_BATCH_VIEW_ROLE_ERR);
@@ -1386,20 +1412,23 @@ public class DataController extends BaseController {
     public XxPayResponse dataStatisticsForNcMonth() {
 
         String payMonth = getValStringRequired("payMonth");
-        Long mchId = getValLongRequired("mchId");
-
-        MchInfo mchInfo = rpcCommonService.rpcMchInfoService.findByMchId(mchId);
-        if (mchInfo == null) {
-            return XxPayResponse.build(RetEnum.RET_HIS_MCHID_REQUIRED);
-        }
 
         Map<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put("payMonth", payMonth);
-        if (mchInfo.getMiniRole() == MchConstant.MCH_MINI_ROLE_MCHCHANT_ADMIN) {
-            paramMap.put("hospitalId", mchInfo.getHospitalId());
-        }else if (mchInfo.getMiniRole() == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
-            paramMap.put("areaCode", mchInfo.getAreaCode());
-        }else if (mchInfo.getMiniRole() == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
+        byte miniRole = getUser().getMiniRole();
+        if (miniRole == MchConstant.MCH_MINI_ROLE_MCHCHANT_ADMIN) {
+            Long hospitalId = getUser().getHospitalId();
+            if (hospitalId == null) {
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_HOSPITALID_REQUIRED);
+            }
+            paramMap.put("hospitalId", hospitalId);
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
+            Integer areaCode = getUser().getAreaCode();
+            if (areaCode == null) {
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_AREACODE_REQUIRED);
+            }
+            paramMap.put("areaCode", areaCode);
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
             //运营平台管理员查看所有的
         }else {
             return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_BATCH_VIEW_ROLE_ERR);
@@ -1467,20 +1496,22 @@ public class DataController extends BaseController {
     public XxPayResponse dataTotalForNcMonth() {
 
         String payMonth = getValStringRequired("payMonth");
-        Long mchId = getValLong("mchId");
-
-        MchInfo mchInfo = rpcCommonService.rpcMchInfoService.findByMchId(mchId);
-        if (mchInfo == null) {
-            return XxPayResponse.build(RetEnum.RET_HIS_MCHID_REQUIRED);
-        }
-
         Map<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put("payMonth", payMonth);
-        if (mchInfo.getMiniRole() == MchConstant.MCH_MINI_ROLE_MCHCHANT_ADMIN) {
-            paramMap.put("hospitalId", mchInfo.getHospitalId());
-        }else if (mchInfo.getMiniRole() == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
-            paramMap.put("areaCode", mchInfo.getAreaCode());
-        }else if (mchInfo.getMiniRole() == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
+        byte miniRole = getUser().getMiniRole();
+        if (miniRole == MchConstant.MCH_MINI_ROLE_MCHCHANT_ADMIN) {
+            Long hospitalId = getUser().getHospitalId();
+            if (hospitalId == null) {
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_HOSPITALID_REQUIRED);
+            }
+            paramMap.put("hospitalId", hospitalId);
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
+            Integer areaCode = getUser().getAreaCode();
+            if (areaCode == null) {
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_AREACODE_REQUIRED);
+            }
+            paramMap.put("areaCode", areaCode);
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
             //运营平台管理员查看所有的
         }else {
             return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_BATCH_VIEW_ROLE_ERR);
@@ -1549,28 +1580,30 @@ public class DataController extends BaseController {
     @RequestMapping("/nc/day/daily")
     public XxPayResponse dataTrendDailyPage() {
 
-        Long mchId = getValLongRequired("mchId");
-
-        MchInfo mchInfo = rpcCommonService.rpcMchInfoService.findByMchId(mchId);
-        if (mchInfo == null) {
-            return XxPayResponse.build(RetEnum.RET_HIS_MCHID_REQUIRED);
-        }
-
         Map<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put("offset", (getPageIndex() -1) * getPageSize());
         paramMap.put("limit", getPageSize());
 
-        if (mchInfo.getMiniRole() == MchConstant.MCH_MINI_ROLE_MCHCHANT_ADMIN) {
-            paramMap.put("hospitalId", mchInfo.getHospitalId());
-        }else if (mchInfo.getMiniRole() == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
-            paramMap.put("areaCode", mchInfo.getAreaCode());
-        }else if (mchInfo.getMiniRole() == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
+        byte miniRole = getUser().getMiniRole();
+        if (miniRole == MchConstant.MCH_MINI_ROLE_MCHCHANT_ADMIN) { //商户管理员
+            Long hospitalId = getUser().getHospitalId();
+            if (hospitalId == null) {
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_HOSPITALID_REQUIRED);
+            }
+            paramMap.put("hospitalId", hospitalId);
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) { //卫健委
+            Integer areaCode = getUser().getAreaCode();
+            if (areaCode == null) {
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_AREACODE_REQUIRED);
+            }
+            paramMap.put("areaCode", areaCode);
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) { //运营平台
             //运营平台管理员查看所有的
         }else {
             return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_BATCH_VIEW_ROLE_ERR);
         }
 
-        Long signHosptial = calSignHospital(mchId, mchInfo.getMiniRole());
+        Long signHosptial = calSignHospital(getUser().getAreaCode(), miniRole);
         List<Map> resultMap = rpcCommonService.rpcMchTradeOrderBatchService.selectDataTrendDailyPage(paramMap);
         if (resultMap != null && resultMap.size() > 0) {
             for (Map map : resultMap) {
@@ -1586,28 +1619,30 @@ public class DataController extends BaseController {
     @RequestMapping("/nc/month/daily")
     public XxPayResponse dataTrendMonthPage() {
 
-        Long mchId = getValLongRequired("mchId");
-
-        MchInfo mchInfo = rpcCommonService.rpcMchInfoService.findByMchId(mchId);
-        if (mchInfo == null) {
-            return XxPayResponse.build(RetEnum.RET_HIS_MCHID_REQUIRED);
-        }
-
         Map<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put("offset", (getPageIndex() -1) * getPageSize());
         paramMap.put("limit", getPageSize());
 
-        if (mchInfo.getMiniRole() == MchConstant.MCH_MINI_ROLE_MCHCHANT_ADMIN) {
-            paramMap.put("hospitalId", mchInfo.getHospitalId());
-        }else if (mchInfo.getMiniRole() == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
-            paramMap.put("areaCode", mchInfo.getAreaCode());
-        }else if (mchInfo.getMiniRole() == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
+        byte miniRole = getUser().getMiniRole();
+        if (miniRole == MchConstant.MCH_MINI_ROLE_MCHCHANT_ADMIN) {   //商户管理员
+            Long hospitalId = getUser().getHospitalId();
+            if (hospitalId == null) {
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_HOSPITALID_REQUIRED);
+            }
+            paramMap.put("hospitalId", hospitalId);
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
+            Integer areaCode = getUser().getAreaCode();
+            if (areaCode == null) {
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_AREACODE_REQUIRED);
+            }
+            paramMap.put("areaCode", areaCode);
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
             //运营平台管理员查看所有的
         }else {
             return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_BATCH_VIEW_ROLE_ERR);
         }
 
-        Long signHosptial = calSignHospital(mchId, mchInfo.getMiniRole());
+        Long signHosptial = calSignHospital(getUser().getAreaCode(), miniRole);
         List<Map> resultMap = rpcCommonService.rpcMchTradeOrderBatchService.selectDataTrendMonthPage(paramMap);
         return XxPayResponse.buildSuccess(resultMap);
     }
@@ -1763,35 +1798,22 @@ public class DataController extends BaseController {
 
     /**
      * 计算签约管辖医院
-     * @param mchId
+     * @param areaCode
      * @param role
      * @return
      */
-    private Long calSignHospital(Long mchId, byte role) {
-        LambdaQueryWrapper<MchInfo> lambdaQueryWrapperByMch = new QueryWrapper<MchInfo>().lambda();
-
+    private Long calSignHospital(Integer areaCode, byte role) {
+        LambdaQueryWrapper<SysUser> lambdaQueryWrapperByMch = new QueryWrapper<SysUser>().lambda();
         if (role == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
-            lambdaQueryWrapperByMch.eq(MchInfo::getParentId, mchId);
+            lambdaQueryWrapperByMch.eq(SysUser::getAreaCode, areaCode);
         }
-        lambdaQueryWrapperByMch.isNotNull(MchInfo::getHospitalId);
+        lambdaQueryWrapperByMch.isNotNull(SysUser::getHospitalId);
 
-        List<MchInfo> mchInfos = rpcCommonService.rpcMchInfoService.list(lambdaQueryWrapperByMch);
+        List<SysUser> sysUsers = rpcCommonService.rpcSysService.list(lambdaQueryWrapperByMch);
 
         //签约管辖医院
-        List<String> hospitalIds = mchInfos.stream().map(MchInfo::getHospitalId).distinct().collect(Collectors.toList());
+        List<Long> hospitalIds = sysUsers.stream().map(SysUser::getHospitalId).distinct().collect(Collectors.toList());
         return CollectionUtils.isEmpty(hospitalIds) ? 0l : hospitalIds.size();
-    }
-
-
-    public static void main(String[] args) throws ParseException {
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
-        Date month = sdf.parse("2021-01");
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(month);
-        calendar.add(Calendar.MONTH, - 1);
-        Date starDate = calendar.getTime();
-        System.out.println("============================" +  (2l - 3l));
     }
 
     // ======================================================结束纳呈支付统计 ==========================================================================

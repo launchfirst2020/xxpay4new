@@ -62,6 +62,8 @@
     <result column="ReturnReasonId" jdbcType="BIGINT" property="returnReasonId" />
     <result column="ReturnDesc" jdbcType="VARCHAR" property="returnDesc" />
     <result column="ImgPathMain" jdbcType="VARCHAR" property="imgPathMain" />
+    <result column="HospitalId" jdbcType="BIGINT" property="hospitalId" />
+    <result column="HisUserId" jdbcType="VARCHAR" property="hisUserId" />
     <result column="Remark" jdbcType="VARCHAR" property="remark" />
     <result column="PostPrice" jdbcType="BIGINT" property="postPrice" />
     <result column="CreateTime" jdbcType="TIMESTAMP" property="createTime" />
@@ -207,6 +209,7 @@
       </if>
     </if>
   </select>
+
 
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
     select
@@ -1585,15 +1588,15 @@
 
   <!-- 近3日有交易的医院数  -->
   <select id="countMchForTrade" parameterType="java.util.List" resultType="java.lang.Long">
-    select count(distinct mt.hospitalId) from t_mch_trade_order mto left join t_mch_info mt on mto.mchId = mt.mchId
+    select count(distinct mto.hospitalId) from t_mch_trade_order mto
     where 1 = 1
-    <if test="mchIds != null">
-      and mto.mchId in
-      <foreach collection="mchIds" item="mchId" index="index" open="(" close=")" separator=",">
-        #{mchId}
+    <if test="hisUserIds != null">
+      and mto.HisUserId in
+      <foreach collection="hisUserIds" item="hisUserId" index="index" open="(" close=")" separator=",">
+        #{hisUserId}
       </foreach>
     </if>
-    and mt.hospitalId is not null
+    and mto.hospitalId is not null
     and mto.createTime > date_sub(now(), interval 3 day)
     and mto.status > 1
     and mto.amount > 0

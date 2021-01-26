@@ -59,7 +59,7 @@
                 <if test="areaCode != null">
                         and h.AreaCode = #{areaCode}
                 </if>
-                <if test="hospitalId != null">selectDataTrendByMonth
+                <if test="hospitalId != null">
                         and h.HospitalId = #{hospitalId}
                 </if>
                 GROUP BY h.BatchDate
@@ -152,6 +152,52 @@
                                 limit ${limit}
                         </if>
                 </if>
+        </select>
+
+
+        <!-- 结算列表 -->
+        <select id="selectTotalByDay" parameterType="java.util.Map" resultMap="BaseResultMap">
+                SELECT h.BatchDate AS  batchDate
+                ,SUM(IFNULL(h.WxSumRealAmount, 0)) AS wxSumRealAmount,         SUM(IFNULL(h.WxSumRefundAmount, 0)) AS wxSumRefundAmount
+                ,SUM(IFNULL(h.WxCuntTrade, 0)) AS wxCuntTrade,                 SUM(IFNULL(h.WxRefundCunt, 0)) AS wxRefundCunt
+                ,SUM(IFNULL(h.AliPaySumRealAmount, 0)) AS aliPaySumRealAmount, SUM(IFNULL(h.AliPaySumRefundAmount, 0)) AS aliPaySumRefundAmount
+                ,SUM(IFNULL(h.AliPayCuntTrade, 0)) AS aliPayCuntTrade,         SUM(IFNULL(h.AliPayRefundCount, 0)) AS aliPayRefundCount
+                FROM t_mch_trade_order_batch h
+                where 1 = 1
+                <if test="areaCode != null">
+                        and h.AreaCode = #{areaCode}
+                </if>
+                <if test="hospitalId != null">
+                        and h.HospitalId = #{hospitalId}
+                </if>
+                GROUP BY h.BatchDate
+                order by h.BatchDate
+                <if test="limit != null" >
+                    <if test="offset != null" >
+                          limit ${offset}, ${limit}
+                    </if>
+                    <if test="offset == null" >
+                          limit ${limit}
+                    </if>
+                </if>
+        </select>
+
+        <!-- 结算列表 -->
+        <select id="countTotalByDay" parameterType="java.util.Map" resultType="java.lang.Long">
+                select count(1) as cnt from
+                (
+                SELECT h.BatchDate AS batchDate
+                FROM t_mch_trade_order_batch h
+                where 1 = 1
+                <if test="areaCode != null">
+                        and h.AreaCode = #{areaCode}
+                </if>
+                <if test="hospitalId != null">
+                        and h.HospitalId = #{hospitalId}
+                </if>
+                GROUP BY h.BatchDate
+                ) a
+
         </select>
 
 

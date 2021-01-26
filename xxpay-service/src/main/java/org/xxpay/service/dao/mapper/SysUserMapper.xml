@@ -21,6 +21,9 @@
     <result column="LastLoginTime" jdbcType="TIMESTAMP" property="lastLoginTime" />
     <result column="LastLoginIp" jdbcType="VARCHAR" property="lastLoginIp" />
     <result column="LastPasswordResetTime" jdbcType="TIMESTAMP" property="lastPasswordResetTime" />
+    <result column="MiniRole" jdbcType="TINYINT" property="miniRole" />
+    <result column="AreaCode" jdbcType="INTEGER" property="areaCode" />
+    <result column="HospitalId" jdbcType="BIGINT" property="hospitalId" />
     <result column="CreateTime" jdbcType="TIMESTAMP" property="createTime" />
     <result column="UpdateTime" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
@@ -85,7 +88,7 @@
   <sql id="Base_Column_List">
     UserId, NickName, LoginUserName, Email, Mobile, LoginPassword, Status, IsSuperAdmin,
     BelongInfoId, BelongInfoType, Avatar, Sex, StoreId, WorkStatus, WorkStartTime, CreateUserId,
-    LastLoginTime, LastLoginIp, LastPasswordResetTime, CreateTime, UpdateTime
+    LastLoginTime, LastLoginIp, LastPasswordResetTime, MiniRole, AreaCode, HospitalId, HisUserId, CreateTime, UpdateTime
   </sql>
   <select id="selectByExample" parameterType="org.xxpay.core.entity.SysUserExample" resultMap="BaseResultMap">
     select

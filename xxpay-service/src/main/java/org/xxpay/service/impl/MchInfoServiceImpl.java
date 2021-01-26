@@ -2,7 +2,6 @@ package org.xxpay.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.collections.CollectionUtils;
@@ -15,8 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.xxpay.core.common.Exception.ServiceException;
 import org.xxpay.core.common.constant.MchConstant;
 import org.xxpay.core.common.constant.RetEnum;
-import org.xxpay.core.common.domain.BizResponse;
-import org.xxpay.core.common.domain.XxPayResponse;
 import org.xxpay.core.common.util.SpringSecurityUtil;
 import org.xxpay.core.common.util.StrUtil;
 import org.xxpay.core.common.util.XXPayUtil;
@@ -402,9 +399,6 @@ public class MchInfoServiceImpl extends ServiceImpl<MchInfoMapper, MchInfo> impl
             if(mchInfo.getIsvId() != null) queryWrapper.eq(MchInfo::getIsvId, mchInfo.getIsvId());
             if(mchInfo.getStatus() != null) queryWrapper.eq(MchInfo::getStatus, mchInfo.getStatus());
             if(mchInfo.getSignStatus() != null) queryWrapper.eq(MchInfo::getSignStatus, mchInfo.getSignStatus());
-            if(mchInfo.getMiniRole() != null) queryWrapper.eq(MchInfo::getMiniRole, mchInfo.getMiniRole());
-            if (mchInfo.getParentId() != null) queryWrapper.eq(MchInfo::getParentId, mchInfo.getParentId());
-            if(StringUtils.isNotEmpty(mchInfo.getHospitalId())) queryWrapper.eq(MchInfo::getHospitalId, mchInfo.getHospitalId());
 
             if(mchInfo.getPs() != null){
                 if(StringUtils.isNotEmpty(mchInfo.getPsStringVal("mchNameLike"))){
