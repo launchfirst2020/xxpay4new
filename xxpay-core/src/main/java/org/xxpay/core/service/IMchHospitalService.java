@@ -11,5 +11,7 @@ public interface IMchHospitalService extends IService<MchHospital> {
 
     IPage<MchHospital> selectPage(IPage page, MchHospital mchHospital);
 
+    MchHospital findByHospitalId(Long hospitalId);
+
 }
 

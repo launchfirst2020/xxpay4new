@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.xxpay.core.entity.MchHospital;
 import org.xxpay.core.service.IMchHospitalService;
@@ -12,6 +13,8 @@ import org.xxpay.service.dao.mapper.MchHospitalMapper;
 @Service
 public class MchHospitalServiceImpl extends ServiceImpl<MchHospitalMapper, MchHospital> implements IMchHospitalService {
 
+    @Autowired
+    private MchHospitalMapper mchHospitalMapper;
 
     @Override
     public IPage<MchHospital> selectPage(IPage page, MchHospital mchHospital) {
@@ -21,6 +24,11 @@ public class MchHospitalServiceImpl extends ServiceImpl<MchHospitalMapper, MchHo
         LambdaQueryWrapper<MchHospital> queryWrapper = getQueryWrapper(mchHospital);
         queryWrapper.orderByDesc(MchHospital::getCreateTime);
         return page(page, queryWrapper);
+    }
+
+    @Override
+    public MchHospital findByHospitalId(Long hospitalId) {
+        return mchHospitalMapper.selectById(hospitalId);
     }
 
     /** 生成[wrapper]查询条件 **/

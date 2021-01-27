@@ -238,6 +238,45 @@ public class MchController extends BaseController {
         return ResponseEntity.ok(XxPayResponse.buildSuccess(resultMap));
     }
 
+    /**
+     * 登录用户的商户信息
+     * @return
+     */
+    @RequestMapping("/getMerchant")
+    public ResponseEntity<?> getMchInfo() {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        byte miniRole = getUser().getMiniRole();
+        String merchantName = null;
+        if (miniRole == MchConstant.MCH_MINI_ROLE_MCHCHANT_ADMIN || miniRole == MchConstant.MCH_MINI_ROLE_CASHIER) {  //商户管理员或者收银员
+            Long hospitalId = getUser().getHospitalId();
+            if (hospitalId == null) {
+                return ResponseEntity.ok(XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_HOSPITALID_REQUIRED));
+            }
+            MchHospital mchHospital = rpcCommonService.rpcMchHospitalService.findByHospitalId(hospitalId);
+            merchantName = mchHospital != null ? mchHospital.getHospitalName() : null;
+        } else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) { // 卫健委
+            Integer areaCode = getUser().getAreaCode();
+            if (areaCode == null) {
+                return ResponseEntity.ok(XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_AREACODE_REQUIRED));
+            }
+            SysAreaCode sysAreaCode = rpcCommonService.rpcSysAreaCodeService.getById(areaCode);
+            if (sysAreaCode != null) {
+                String areaName = sysAreaCode.getAreaName();
+                SysCityCode sysCityCode =  rpcCommonService.rpcSysCityCodeService.getById(sysAreaCode.getCityCode());
+                String cityName = sysCityCode != null ? sysCityCode.getCityName() : null;
+                merchantName = cityName + areaName + MchConstant.HEALTH_COMMISSION_SUBFIX;
+            }
+        } else if (miniRole == MchConstant.MCH_MINI_ROLE_PLATFORM_OPERATORS) { //运营平台
+            merchantName = MchConstant.PLATFORM_OPERATORS_NAME;
+        } else {
+            return ResponseEntity.ok(XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_ROLE_ERROR));
+        }
+        resultMap.put("miniRole", miniRole);
+        resultMap.put("loginUserName", getUser().getLoginUserName());
+        resultMap.put("merchantName", merchantName);
+        return ResponseEntity.ok(XxPayResponse.buildSuccess(resultMap));
+    }
+
 
     // ================================================================结束纳呈新增修改================================================================
 

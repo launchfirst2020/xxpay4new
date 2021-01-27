@@ -507,5 +507,8 @@ public class MchConstant {
     public static final byte MCH_MINI_ROLE_HEALTH_COMMISSION = 2;   //卫健委
     public static final byte MCH_MINI_ROLE_PLATFORM_OPERATORS = 3;      //运营商
 
+    public static final String  PLATFORM_OPERATORS_NAME = "上海纳呈网络科技有限公司";
+    public static final String HEALTH_COMMISSION_SUBFIX = "卫生健康委员会";
+
 
 }
