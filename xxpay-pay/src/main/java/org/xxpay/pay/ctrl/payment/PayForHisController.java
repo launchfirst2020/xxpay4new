@@ -4,9 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.xxpay.core.common.constant.MchConstant;
@@ -18,6 +17,7 @@ import org.xxpay.core.common.util.MyLog;
 import org.xxpay.core.common.util.PayDigestUtil;
 import org.xxpay.core.common.util.XXPayUtil;
 import org.xxpay.core.entity.*;
+import org.xxpay.pay.channel.PayConfig;
 import org.xxpay.pay.ctrl.common.BaseController;
 import org.xxpay.pay.service.RpcCommonService;
 import javax.servlet.http.HttpServletRequest;
@@ -35,7 +35,7 @@ public class PayForHisController extends BaseController {
 
     @Autowired
     private RpcCommonService rpcCommonService;
-
+    
     /**
      * 对接his支付条形码付款
      * @param request
@@ -51,7 +51,21 @@ public class PayForHisController extends BaseController {
             String mchId = requestParams.getString("mchId");
             String amount = requestParams.getString("amount");
             String subject = requestParams.getString("subject");
+            String body = requestParams.getString("body");
             String extra = requestParams.getString("extra");  //扩展参数, 条形码参数
+            Long hospitalId = requestParams.getLong("hospitalId");  //收银员对应的医院ID
+            String hisUserId = requestParams.getString("hisUserId"); //支付下单操作者, 医院收银员或者有收款权限的管理者
+
+            //收银员或者收款管理员ID必须输入
+            if (StringUtils.isBlank(hisUserId)) {
+                return ApiBuilder.bizError(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HISUSER_REQIURED);
+            }
+
+            //收银员医院ID必须输入
+            if (hospitalId == null) {
+                return ApiBuilder.bizError(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HOSPITAL_REQIURED);
+            }
+
             //条形码不能为空
             if (StringUtils.isBlank(extra)) {
                 return ApiBuilder.bizError(RetEnum.RET_HIS_PARAMETER_EXTRA_BAR_REQUIRED);
@@ -97,7 +111,7 @@ public class PayForHisController extends BaseController {
 
             MchTradeOrder addMchTradeOrder = rpcCommonService.rpcMchTradeOrderService.insertTradeOrderHis(
                     mchInfo, MchConstant.TRADE_TYPE_PAY, Long.valueOf(amountParam), Long.valueOf(amountParam), tradeProductType, Integer.parseInt(productId), clientIp,
-                    mchOrderNo,null, sysUser != null ? sysUser.getStoreId() : null,
+                    mchOrderNo,null, sysUser != null ? sysUser.getStoreId() : null, subject, body,  hospitalId, hisUserId,
                     (mchTradeOrder) -> {
                         mchTradeOrder.setUserId(extra); //用户ID
                         mchTradeOrder.setIsvDeviceNo(null); //服务商设备编号

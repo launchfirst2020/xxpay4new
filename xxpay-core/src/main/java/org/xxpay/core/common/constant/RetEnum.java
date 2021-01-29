@@ -293,7 +293,9 @@ public enum RetEnum {
     RET_HIS_MCH_TRADE_ORDER_TO_HIS_ROLE_ERROR(17015, "小程序对应的角色只能是收银员、商户管理员、卫健委和平台运营商"),
     RET_HIS_MCH_TRADE_ORDER_TO_HIS_HOSPITALID_REQUIRED(17016, "医院ID不能为空"),
     RET_HIS_MCH_TRADE_ORDER_TO_HIS_AREACODE_REQUIRED(17017, "县区码值不能为空"),
-    RET_HIS_MCH_TRADE_ORDER_SUPER_ADMIN_ROLE_ERR(17018, "角色为卫健委与平台运行商角色才能查询统计"),;
+    RET_HIS_MCH_TRADE_ORDER_SUPER_ADMIN_ROLE_ERR(17018, "角色为卫健委与平台运行商角色才能查询统计"),
+    RET_HIS_MCH_TRADE_ORDER_TO_HISUSER_REQIURED(17019, "为确保支付可回查追溯性, 请输入收银员或医院收银管理员用户ID"),
+    RET_HIS_MCH_TRADE_ORDER_TO_HOSPITAL_REQIURED(17020, "为确保支付可回查追溯性, 请输入收银员或收银管理员对应的医院ID");
 
     private int code;
     private String message;

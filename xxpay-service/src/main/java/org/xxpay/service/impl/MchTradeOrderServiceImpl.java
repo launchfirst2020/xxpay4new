@@ -254,7 +254,7 @@ public class MchTradeOrderServiceImpl extends ServiceImpl<MchTradeOrderMapper, M
     @Override
     public MchTradeOrder insertTradeOrderHis(MchInfo mchInfo, Byte tradeType, Long requiredAmount, Long realAmount,
                                           Byte tradeProductType, Integer productId, String ip, String mchOrderNo,
-                                          Long operatorId, Long storeId, AddTradeOrderCallBack callback) {
+                                          Long operatorId, Long storeId, String subject, String body, Long hospitalId, String hisUserId, AddTradeOrderCallBack callback) {
 
         MchTradeOrder mchTradeOrder = new MchTradeOrder();
         mchTradeOrder.setTradeType(tradeType); //交易类型 1-收款 2-充值
@@ -280,37 +280,39 @@ public class MchTradeOrderServiceImpl extends ServiceImpl<MchTradeOrderMapper, M
         mchTradeOrder.setOrderAmount(requiredAmount); //订单金额
         mchTradeOrder.setAmount(realAmount);  //实际支付金额
         mchTradeOrder.setDiscountAmount(requiredAmount - realAmount); //优惠金额
+        mchTradeOrder.setHospitalId(hospitalId);  //医院ID
+        mchTradeOrder.setHisUserId(hisUserId);   //医院收银员或者收银主管之类
 
         String prefix = MchConstant.TRADE_TYPE_PAY == tradeType ? "消费|" : "充值|";
 
         if(productId == null){ //会员卡支付
-            mchTradeOrder.setSubject(prefix + "会员卡支付商品"); //商品标题
-            mchTradeOrder.setBody(prefix + "会员卡支付商品"); //商品描述信息
+            mchTradeOrder.setSubject(StringUtils.isBlank(subject) ? prefix + "会员卡支付商品" : subject); //商品标题
+            mchTradeOrder.setBody(StringUtils.isBlank(body) ? prefix + "会员卡支付商品" : body); //商品描述信息
         }else{
 
             if(PayConstant.PAY_PRODUCT_WX_JSAPI == productId){
-                mchTradeOrder.setSubject(prefix + "微信扫码支付");
-                mchTradeOrder.setBody(prefix + "微信扫码支付");
+                mchTradeOrder.setSubject(StringUtils.isBlank(subject) ? prefix + "微信扫码支付" : subject);
+                mchTradeOrder.setBody(StringUtils.isBlank(body) ? prefix + "微信扫码支付" : body);
             }else if(PayConstant.PAY_PRODUCT_ALIPAY_JSAPI == productId){
-                mchTradeOrder.setSubject(prefix + "支付宝扫码支付");
-                mchTradeOrder.setBody(prefix + "支付宝扫码支付");
+                mchTradeOrder.setSubject(StringUtils.isBlank(subject) ? prefix + "支付宝扫码支付" : subject);
+                mchTradeOrder.setBody(StringUtils.isBlank(body) ? prefix + "支付宝扫码支付" : body);
 
             }else if(PayConstant.PAY_PRODUCT_WX_BAR == productId){
-                mchTradeOrder.setSubject(prefix + "微信条码支付");
-                mchTradeOrder.setBody(prefix + "微信条码支付");
+                mchTradeOrder.setSubject(StringUtils.isBlank(subject) ? prefix + "微信条码支付" : subject);
+                mchTradeOrder.setBody(StringUtils.isBlank(body) ? prefix + "微信条码支付" : body);
 
             }else if(PayConstant.PAY_PRODUCT_ALIPAY_BAR == productId){
-                mchTradeOrder.setSubject(prefix + "支付宝条码支付");
-                mchTradeOrder.setBody(prefix + "支付宝条码支付");
+                mchTradeOrder.setSubject(StringUtils.isBlank(subject) ? prefix + "支付宝条码支付" : subject);
+                mchTradeOrder.setBody(StringUtils.isBlank(body) ? prefix + "支付宝条码支付" : body);
             }else if(PayConstant.PAY_PRODUCT_UNIONPAY_BAR == productId){
-                mchTradeOrder.setSubject(prefix + "云闪付条码支付");
-                mchTradeOrder.setBody(prefix + "云闪付条码支付");
+                mchTradeOrder.setSubject(StringUtils.isBlank(subject) ? prefix + "云闪付条码支付" : subject);
+                mchTradeOrder.setBody(StringUtils.isBlank(body) ? prefix + "云闪付条码支付" : body);
             }else if(PayConstant.PAY_PRODUCT_WX_MINI_PROGRAM == productId){
-                mchTradeOrder.setSubject(prefix + "微信小程序支付");
-                mchTradeOrder.setBody(prefix + "微信小程序支付");
+                mchTradeOrder.setSubject(StringUtils.isBlank(subject) ? prefix + "微信小程序支付" : subject);
+                mchTradeOrder.setBody(StringUtils.isBlank(body) ? prefix + "微信小程序支付" : body);
             }else if(PayConstant.PAY_PRODUCT_JD_H5 == productId){
-                mchTradeOrder.setSubject(prefix + "京东支付");
-                mchTradeOrder.setBody(prefix + "京东支付");
+                mchTradeOrder.setSubject(StringUtils.isBlank(subject) ? prefix + "京东支付" : subject);
+                mchTradeOrder.setBody(StringUtils.isBlank(body) ? prefix + "京东支付" : body);
             }
         }
 

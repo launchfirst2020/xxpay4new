@@ -61,7 +61,7 @@ public interface IMchTradeOrderService extends IService<MchTradeOrder> {
 
     MchTradeOrder insertTradeOrderHis(MchInfo mchInfo, Byte tradeType, Long requiredAmount, Long realAmount,
                                              Byte tradeProductType, Integer productId, String ip, String mchOrderNo,
-                                             Long operatorId, Long storeId, AddTradeOrderCallBack callback);
+                                             Long operatorId, Long storeId, String subject, String body, Long hospitalId, String hisUserId, AddTradeOrderCallBack callback);
 
     /** 自动获取JWT信息 **/
     MchTradeOrder insertTradeOrderJWT(MchInfo mchInfo, Byte tradeType, Long requiredAmount, Long realAmount,

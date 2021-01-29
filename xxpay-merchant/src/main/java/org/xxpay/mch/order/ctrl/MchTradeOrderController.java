@@ -338,7 +338,7 @@ public class MchTradeOrderController extends BaseController {
                 return ResponseEntity.ok(XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_AREACODE_REQUIRED));
             }
             paramMap.put("areaCode", areaCode);
-        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {  //运营平台
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_PLATFORM_OPERATORS) {  //运营平台
             //运营平台管理员查看所有的
         }else {
             return ResponseEntity.ok(XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_BATCH_VIEW_ROLE_ERR));
@@ -395,7 +395,7 @@ public class MchTradeOrderController extends BaseController {
                 return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_AREACODE_REQUIRED);
             }
             paramMap.put("areaCode", areaCode);
-        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {  //运营平台
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_PLATFORM_OPERATORS) {  //运营平台
             //运营平台管理员查看所有的
         }else {
             return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_BATCH_VIEW_ROLE_ERR);
@@ -430,7 +430,7 @@ public class MchTradeOrderController extends BaseController {
                 return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_AREACODE_REQUIRED);
             }
             paramMap.put("areaCode", areaCode);
-        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_PLATFORM_OPERATORS) {
             //运营平台管理员查看所有的
         }else {
             return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_BATCH_VIEW_ROLE_ERR);
@@ -441,25 +441,6 @@ public class MchTradeOrderController extends BaseController {
 
         return XxPayResponse.buildSuccess(monthTotal);
     }
-
-    /**
-     * 结算列表(按月)
-     * @return
-     */
-    @RequestMapping("/nc/addBatcMonth")
-    @ResponseBody
-    public XxPayResponse addBatchMonthForNc() {
-
-        MchTradeOrderBatchMonth mchTradeOrderBatchMonth = getObject( MchTradeOrderBatchMonth.class);
-
-        //if(mchTradeOrderBatch == null) mchTradeOrderBatch = new MchTradeOrderBatch();
-
-        mchTradeOrderBatchMonth.setBatchTaskStatus(MchConstant.STATUS_OK);
-
-        rpcCommonService.rpcMchTradeOrderBatchMonthService.add(mchTradeOrderBatchMonth);
-        return XxPayResponse.buildSuccess();
-    }
-
 
     /**
      * 医院列表

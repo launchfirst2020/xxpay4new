@@ -12,4 +12,10 @@ public interface IMchTradeOrderBatchHourService  extends IService<MchTradeOrderB
     void add(MchTradeOrderBatchHour mchTradeOrderBatchHour);
 
     List<MchTradeOrderBatchHour> selectPayTrend(Map conditon);
+
+    //查询交易日小时时段数据
+    List<MchTradeOrderBatchHour> selectHourBatch(Map<String, Object> paramMap);
+
+    //插入交易日小时时段数据
+    int insertHourBatch(List<MchTradeOrderBatchHour> list);
 }

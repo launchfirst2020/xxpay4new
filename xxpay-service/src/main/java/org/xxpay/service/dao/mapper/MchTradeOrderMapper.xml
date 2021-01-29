@@ -141,7 +141,7 @@
     GivePoints, RefundTotalAmount, TradeSuccTime, SettTaskStatus, IsvDeviceNo, IndustryType,
     PostType, StoreAreaId, AreaName, AppointmentTime, AddressId, ProvinceCode, CityCode,
     AreaCode, AreaInfo, Address, ReceiveTel, ReceiveName, PostId, TransportNo, PostStatus,
-    Evaluation, EvaluationImage, ReturnReasonId, ReturnDesc, ImgPathMain, Remark, PostPrice,
+    Evaluation, EvaluationImage, ReturnReasonId, ReturnDesc, ImgPathMain, HospitalId, HisUserId,  Remark, PostPrice,
     CreateTime, UpdateTime
   </sql>
   <sql id="Blob_Column_List">
@@ -249,7 +249,7 @@
       Address, ReceiveTel, ReceiveName,
       PostId, TransportNo, PostStatus,
       Evaluation, EvaluationImage, ReturnReasonId,
-      ReturnDesc, ImgPathMain, Remark,
+      ReturnDesc, ImgPathMain, HospitalId, HisUserId, Remark,
       PostPrice, CreateTime, UpdateTime,
       GoodsDesc)
     values (#{tradeOrderId,jdbcType=VARCHAR}, #{tradeType,jdbcType=TINYINT}, #{depositMode,jdbcType=TINYINT},
@@ -271,7 +271,7 @@
       #{address,jdbcType=VARCHAR}, #{receiveTel,jdbcType=VARCHAR}, #{receiveName,jdbcType=VARCHAR},
       #{postId,jdbcType=BIGINT}, #{transportNo,jdbcType=VARCHAR}, #{postStatus,jdbcType=TINYINT},
       #{evaluation,jdbcType=VARCHAR}, #{evaluationImage,jdbcType=VARCHAR}, #{returnReasonId,jdbcType=BIGINT},
-      #{returnDesc,jdbcType=VARCHAR}, #{imgPathMain,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
+      #{returnDesc,jdbcType=VARCHAR}, #{imgPathMain,jdbcType=VARCHAR},#{hospitalId,jdbcType=BIGINT}, #{hisUserId,jdbcType=VARCHAR},  #{remark,jdbcType=VARCHAR},
       #{postPrice,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
       #{goodsDesc,jdbcType=LONGVARCHAR})
   </insert>
@@ -454,6 +454,12 @@
       </if>
       <if test="imgPathMain != null">
         ImgPathMain,
+      </if>
+      <if test="hospitalId != null">
+        HospitalId,
+      </if>
+      <if test="hisUserId != null">
+        HisUserId,
       </if>
       <if test="remark != null">
         Remark,
@@ -648,6 +654,12 @@
       </if>
       <if test="imgPathMain != null">
         #{imgPathMain,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalId != null">
+        #{hospitalId,jdbcType=BIGINT},
+      </if>
+      <if test="hisUserId != null">
+        #{hisUserId,jdbcType=VARCHAR},
       </if>
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
@@ -852,6 +864,12 @@
       <if test="record.imgPathMain != null">
         ImgPathMain = #{record.imgPathMain,jdbcType=VARCHAR},
       </if>
+      <if test="record.hospitalId != null">
+        HospitalId = #{record.hospitalId,jdbcType=BIGINT},
+      </if>
+      <if test="record.hisUserId != null">
+        HisUserId = #{record.hisUserId,jdbcType=VARCHAR},
+      </if>
       <if test="record.remark != null">
         Remark = #{record.remark,jdbcType=VARCHAR},
       </if>
@@ -933,6 +951,8 @@
     ReturnReasonId = #{record.returnReasonId,jdbcType=BIGINT},
     ReturnDesc = #{record.returnDesc,jdbcType=VARCHAR},
     ImgPathMain = #{record.imgPathMain,jdbcType=VARCHAR},
+    HospitalId = #{record.hospitalId,jdbcType=BIGINT},
+    HisUserId = #{record.hisUserId,jdbcType=VARCHAR},
     Remark = #{record.remark,jdbcType=VARCHAR},
     PostPrice = #{record.postPrice,jdbcType=BIGINT},
     CreateTime = #{record.createTime,jdbcType=TIMESTAMP},
@@ -1003,6 +1023,8 @@
     ReturnReasonId = #{record.returnReasonId,jdbcType=BIGINT},
     ReturnDesc = #{record.returnDesc,jdbcType=VARCHAR},
     ImgPathMain = #{record.imgPathMain,jdbcType=VARCHAR},
+    HospitalId = #{record.hospitalId,jdbcType=BIGINT},
+    HisUserId = #{record.hisUserId,jdbcType=VARCHAR},
     Remark = #{record.remark,jdbcType=VARCHAR},
     PostPrice = #{record.postPrice,jdbcType=BIGINT},
     CreateTime = #{record.createTime,jdbcType=TIMESTAMP},
@@ -1188,6 +1210,12 @@
       <if test="imgPathMain != null">
         ImgPathMain = #{imgPathMain,jdbcType=VARCHAR},
       </if>
+      <if test="hospitalId != null">
+        HospitalId = #{hospitalId,jdbcType=BIGINT},
+      </if>
+      <if test="hisUserId != null">
+        HisUserId = #{hisUserId,jdbcType=VARCHAR},
+      </if>
       <if test="remark != null">
         Remark = #{remark,jdbcType=VARCHAR},
       </if>
@@ -1266,6 +1294,8 @@
       ReturnReasonId = #{returnReasonId,jdbcType=BIGINT},
       ReturnDesc = #{returnDesc,jdbcType=VARCHAR},
       ImgPathMain = #{imgPathMain,jdbcType=VARCHAR},
+      HospitalId = #{hospitalId,jdbcType=BIGINT},
+      HisUserId = #{hisUserId,jdbcType=VARCHAR},
       Remark = #{remark,jdbcType=VARCHAR},
       PostPrice = #{postPrice,jdbcType=BIGINT},
       CreateTime = #{createTime,jdbcType=TIMESTAMP},
@@ -1333,6 +1363,8 @@
       ReturnReasonId = #{returnReasonId,jdbcType=BIGINT},
       ReturnDesc = #{returnDesc,jdbcType=VARCHAR},
       ImgPathMain = #{imgPathMain,jdbcType=VARCHAR},
+      HospitalId = #{hospitalId,jdbcType=BIGINT},
+      HisUserId = #{hisUserId,jdbcType=VARCHAR},
       Remark = #{remark,jdbcType=VARCHAR},
       PostPrice = #{postPrice,jdbcType=BIGINT},
       CreateTime = #{createTime,jdbcType=TIMESTAMP},

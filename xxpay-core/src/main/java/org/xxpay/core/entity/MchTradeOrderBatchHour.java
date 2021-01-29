@@ -30,13 +30,6 @@ public class MchTradeOrderBatchHour extends BaseModel {
     private String hour;
 
     /**
-     * 商户ID
-     */
-    @TableField("MchId")
-    private Long mchId;
-
-
-    /**
      * 微信收款金额,单位分
      */
     @TableField("WxSumRealAmount")
@@ -155,14 +148,6 @@ public class MchTradeOrderBatchHour extends BaseModel {
 
     public void setBatchDate(String batchDate) {
         this.batchDate = batchDate;
-    }
-
-    public Long getMchId() {
-        return mchId;
-    }
-
-    public void setMchId(Long mchId) {
-        this.mchId = mchId;
     }
 
     public Long getWxSumRealAmount() {
@@ -299,7 +284,6 @@ public class MchTradeOrderBatchHour extends BaseModel {
                 "BatchId=" + batchId +
                 ", BatchDate=" + batchDate +
                 ", Hour=" + hour +
-                ", MchId=" + mchId +
                 ", WxSumRealAmount=" + wxSumRealAmount +
                 ", WxSumRefundAmount=" + wxSumRefundAmount +
                 ", WxCuntTrade=" + wxCuntTrade +

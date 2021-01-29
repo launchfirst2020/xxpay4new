@@ -34,6 +34,16 @@ public class MchTradeOrderBatchHourServiceImpl extends ServiceImpl<MchTradeOrder
         return mchTradeOrderBatchHourMapper.selectPayTrend(conditon);
     }
 
+    @Override
+    public List<MchTradeOrderBatchHour> selectHourBatch(Map<String, Object> paramMap) {
+        return mchTradeOrderBatchHourMapper.selectHourBatch(paramMap);
+    }
+
+    @Override
+    public int insertHourBatch(List<MchTradeOrderBatchHour> list) {
+        return mchTradeOrderBatchHourMapper.insertHourBatch(list);
+    }
+
 
     /** 生成[wrapper]查询条件 **/
     private LambdaQueryWrapper<MchTradeOrderBatchHour> getQueryWrapper(MchTradeOrderBatchHour mchTradeOrderBatchHour){
@@ -44,8 +54,6 @@ public class MchTradeOrderBatchHourServiceImpl extends ServiceImpl<MchTradeOrder
             if(StringUtils.isNotEmpty(mchTradeOrderBatchHour.getBatchId())) queryWrapper.eq(MchTradeOrderBatchHour::getBatchId, mchTradeOrderBatchHour.getBatchId());
             if(StringUtils.isNotEmpty(mchTradeOrderBatchHour.getBatchDate())) queryWrapper.eq(MchTradeOrderBatchHour::getBatchDate, mchTradeOrderBatchHour.getBatchDate());
             if(StringUtils.isNotEmpty(mchTradeOrderBatchHour.getHour())) queryWrapper.eq(MchTradeOrderBatchHour::getHour, mchTradeOrderBatchHour.getHour());
-            if(mchTradeOrderBatchHour.getMchId() != null) queryWrapper.eq(MchTradeOrderBatchHour::getMchId, mchTradeOrderBatchHour.getMchId());
-
             if(mchTradeOrderBatchHour.getWxSumRealAmount() != null) queryWrapper.eq(MchTradeOrderBatchHour::getWxSumRealAmount, mchTradeOrderBatchHour.getWxSumRealAmount());
             if(mchTradeOrderBatchHour.getWxSumRefundAmount() != null) queryWrapper.eq(MchTradeOrderBatchHour::getWxSumRefundAmount, mchTradeOrderBatchHour.getWxSumRefundAmount());
             if(mchTradeOrderBatchHour.getWxCuntTrade() != null) queryWrapper.eq(MchTradeOrderBatchHour::getWxCuntTrade, mchTradeOrderBatchHour.getWxCuntTrade());

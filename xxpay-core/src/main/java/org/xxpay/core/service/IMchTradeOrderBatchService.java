@@ -44,4 +44,10 @@ public interface IMchTradeOrderBatchService extends IService<MchTradeOrderBatch>
     /**  交易分析---月报   **/
     List<Map> selectDataTrendMonthPage(Map condition);
 
+
+    //按交易日期跑批
+    int insertDailyBatch(List<MchTradeOrderBatch> list);
+
+    List<MchTradeOrderBatch> selectDailyBatch(Map<String, Object> paramMap);
+
 }

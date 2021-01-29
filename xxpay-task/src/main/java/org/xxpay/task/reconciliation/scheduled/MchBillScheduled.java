@@ -31,7 +31,7 @@ import java.util.Map;
  * @date: 18/02/01
  * @description: 生成商户对账单任务 (优化:只需要遍历一次支付订单表,可生成所有的商户对账文件)
  */
-@Component
+//@Component
 public class MchBillScheduled {
 
     private static final MyLog _log = MyLog.getLog(MchBillScheduled.class);

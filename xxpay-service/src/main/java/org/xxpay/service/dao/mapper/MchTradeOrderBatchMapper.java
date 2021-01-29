@@ -36,4 +36,8 @@ public interface MchTradeOrderBatchMapper extends BaseMapper<MchTradeOrderBatch>
     //交易分析--月报
     List<Map> selectDataTrendMonthPage(Map conditon);
 
+    //按交易日期跑批
+    List<MchTradeOrderBatch> selectDailyBatch(Map<String, Object> paramMap);
+    int insertDailyBatch(List<MchTradeOrderBatch> list);
+
 }

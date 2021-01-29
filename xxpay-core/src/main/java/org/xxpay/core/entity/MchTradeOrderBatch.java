@@ -37,13 +37,6 @@ public class MchTradeOrderBatch extends BaseModel {
     private String batchMonth;
 
     /**
-     * 商户ID
-     */
-    @TableField("MchId")
-    private Long mchId;
-
-
-    /**
      * 微信收款金额,单位分
      */
     @TableField("WxSumRealAmount")
@@ -196,14 +189,6 @@ public class MchTradeOrderBatch extends BaseModel {
         this.areaCode = areaCode;
     }
 
-    public Long getMchId() {
-        return mchId;
-    }
-
-    public void setMchId(Long mchId) {
-        this.mchId = mchId;
-    }
-
     public Long getWxSumRealAmount() {
         return wxSumRealAmount;
     }
@@ -306,7 +291,6 @@ public class MchTradeOrderBatch extends BaseModel {
                 "BatchId=" + batchId +
                 ", BatchDate=" + batchDate +
                 ", BatchMonth=" + batchMonth +
-                ", MchId=" + mchId +
                 ", WxSumRealAmount=" + wxSumRealAmount +
                 ", WxSumRefundAmount=" + wxSumRefundAmount +
                 ", WxCuntTrade=" + wxCuntTrade +

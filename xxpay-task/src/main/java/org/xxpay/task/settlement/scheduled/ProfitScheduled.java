@@ -24,7 +24,7 @@ public class ProfitScheduled {
 
 
 //    @Scheduled(cron="0 0/1 * * * ?")   //每分钟执行一次
-    @Scheduled(cron="0 0/10 * * * ?")   //每10分钟执行一次  TODO 上线需更改为正常时间， 测试环境10分钟跑批/次
+//    @Scheduled(cron="0 0/10 * * * ?")   //每10分钟执行一次  TODO 上线需更改为正常时间， 测试环境10分钟跑批/次
 //    @Scheduled(cron="0 0 3 * * ?")   //每天的 03:00 启动定时任务
     public void allAgentSettDailyCollectTask() {
     	

@@ -39,10 +39,10 @@ public class MchTradeOrderBatchServiceImpl extends ServiceImpl<MchTradeOrderBatc
     }
 
     @Override
-    public MchTradeOrderBatch getOneMchTradeOrderBatch(String batchDate, Long mchId) {
+    public MchTradeOrderBatch getOneMchTradeOrderBatch(String batchDate, Long hospitalId) {
         MchTradeOrderBatch mchTradeOrderBatch = new MchTradeOrderBatch();
         mchTradeOrderBatch.setBatchDate(batchDate);
-        mchTradeOrderBatch.setMchId(mchId);
+        mchTradeOrderBatch.setHospitalId(hospitalId);
         return getOne(getQueryWrapper(mchTradeOrderBatch));
     }
 
@@ -61,6 +61,16 @@ public class MchTradeOrderBatchServiceImpl extends ServiceImpl<MchTradeOrderBatc
     @Override
     public List<Map> selectDataTrendMonthPage(Map condition) {
         return mchTradeOrderBatchMapper.selectDataTrendMonthPage(condition);
+    }
+
+    @Override
+    public int insertDailyBatch(List<MchTradeOrderBatch> list) {
+        return mchTradeOrderBatchMapper.insertDailyBatch(list);
+    }
+
+    @Override
+    public List<MchTradeOrderBatch> selectDailyBatch(Map<String, Object> paramMap) {
+        return mchTradeOrderBatchMapper.selectDailyBatch(paramMap);
     }
 
     @Override
@@ -102,7 +112,6 @@ public class MchTradeOrderBatchServiceImpl extends ServiceImpl<MchTradeOrderBatc
             if(StringUtils.isNotEmpty(mchTradeOrderBatch.getBatchId())) queryWrapper.eq(MchTradeOrderBatch::getBatchId, mchTradeOrderBatch.getBatchId());
             if(StringUtils.isNotEmpty(mchTradeOrderBatch.getBatchDate())) queryWrapper.eq(MchTradeOrderBatch::getBatchDate, mchTradeOrderBatch.getBatchDate());
             if(StringUtils.isNotEmpty(mchTradeOrderBatch.getBatchMonth())) queryWrapper.eq(MchTradeOrderBatch::getBatchMonth, mchTradeOrderBatch.getBatchMonth());
-            if(mchTradeOrderBatch.getMchId() != null) queryWrapper.eq(MchTradeOrderBatch::getMchId, mchTradeOrderBatch.getMchId());
 
             if(mchTradeOrderBatch.getWxSumRealAmount() != null) queryWrapper.eq(MchTradeOrderBatch::getWxSumRealAmount, mchTradeOrderBatch.getWxSumRealAmount());
             if(mchTradeOrderBatch.getWxSumRefundAmount() != null) queryWrapper.eq(MchTradeOrderBatch::getWxSumRefundAmount, mchTradeOrderBatch.getWxSumRefundAmount());

@@ -45,4 +45,10 @@ public class RpcCommonService {
     @Autowired
     public IOrderProfitTaskService rpcOrderProfitTaskService;
 
+    @Autowired
+    public IMchTradeOrderBatchService rpcMchTradeOrderBatchService;
+
+    @Autowired
+    public IMchTradeOrderBatchHourService rpcMchTradeOrderBatchHourService;
+
 }

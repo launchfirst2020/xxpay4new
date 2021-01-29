@@ -31,7 +31,7 @@ import com.csvreader.CsvWriter;
  * @version V1.0
  * <p>
  */
-@Component
+//@Component
 public class AgpayBillScheduled {
 
     private static final MyLog _log = MyLog.getLog(AgpayBillScheduled.class);

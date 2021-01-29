@@ -279,9 +279,6 @@ public class RpcCommonService {
     public IMchTradeOrderBatchService rpcMchTradeOrderBatchService;
 
     @Autowired
-    public IMchTradeOrderBatchMonthService rpcMchTradeOrderBatchMonthService;
-
-    @Autowired
     public IMchHospitalService rpcMchHospitalService;
 
 }

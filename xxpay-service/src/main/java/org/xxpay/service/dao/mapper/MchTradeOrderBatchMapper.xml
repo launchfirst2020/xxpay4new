@@ -7,7 +7,6 @@
                 <id column="BatchId" jdbcType="VARCHAR" property="batchId" />
                 <result column="BatchDate" jdbcType="VARCHAR" property="batchDate" />
                 <result column="BatchMonth" jdbcType="VARCHAR" property="batchMonth" />
-                <result column="MchId" jdbcType="BIGINT" property="mchId" />
                 <result column="WxSumRealAmount" jdbcType="BIGINT" property="wxSumRealAmount" />
                 <result column="WxSumRefundAmount" jdbcType="BIGINT" property="wxSumRefundAmount" />
                 <result column="WxCuntTrade" jdbcType="BIGINT" property="wxCuntTrade" />
@@ -201,5 +200,44 @@
         </select>
 
 
+        <!--  按交易日查询交易跑批数据 -->
+        <select id="selectDailyBatch" parameterType="java.util.Map"   resultMap="BaseResultMap">
+              select
+                date(o.TradeSuccTime)     batchDate
+               ,date_format(o.TradeSuccTime, '%Y-%m')  batchMonth
+               ,sum(if(o.ProductType = 3, o.Amount, 0))              wxSumRealAmount
+               ,sum(if(o.ProductType = 3, o.RefundTotalAmount, 0))   wxSumRefundAmount
+               ,count(if(o.ProductType = 3, true, null))               wxCuntTrade
+               ,count(if((o.Status = 4 or o.Status = 5) and o.ProductType = 3, true, null)) wxRefundCunt
+               ,sum(IF(o.ProductType = 4, o.Amount, 0))              aliPaySumRealAmount
+               ,sum(IF(o.ProductType = 4, o.RefundTotalAmount, 0))   aliPaySumRefundAmount
+               ,count(IF(o.ProductType = 4, true, null))               aliPayCuntTrade
+               ,count(IF((o.Status = 4 or o.Status = 5) and o.ProductType = 4, true, null)) aliPayRefundCount
+               ,1  batchTaskStatus
+               ,o.HospitalId          hospitalId
+               ,o.ProvinceCode        provinceCode
+               ,o.CityCode            cityCode
+               ,o.AreaCode            areaCode
+              from t_mch_trade_order o
+              where (o.Status = 2 or o.Status = 4 or o.`Status` = 5)
+              and (o.ProductType = 3 or o.ProductType = 4)
+              and date(o.TradeSuccTime) = #{payDate}
+             group by date(o.TradeSuccTime), o.ProvinceCode, o.CityCode, o.AreaCode, o.HospitalId
+             order by  o.TradeSuccTime
+        </select>
+
+        <!-- 插入日跑批数据 -->
+        <insert id="insertDailyBatch" parameterType="org.xxpay.core.entity.MchTradeOrderBatch" >
+              insert into t_mch_trade_order_batch(BatchId, BatchDate, BatchMonth, WxSumRealAmount, WxSumRefundAmount, WxCuntTrade, WxRefundCunt,
+                       AliPaySumRealAmount, AliPaySumRefundAmount, AliPayCuntTrade, AliPayRefundCount, BatchTaskStatus, HospitalId, ProvinceCode, CityCode,
+                       AreaCode, Remark, CreateTime, UpdateTime)
+              values
+            <foreach collection ="list" item="day" separator =",">
+                (
+                   #{day.batchId}, #{day.batchDate}, #{day.batchMonth}, #{day.wxSumRealAmount},  #{day.wxSumRefundAmount},  #{day.wxCuntTrade},  #{day.wxRefundCunt},  #{day.aliPaySumRealAmount},  #{day.aliPaySumRefundAmount},
+                    #{day.aliPayCuntTrade},  #{day.aliPayRefundCount}, #{day.batchTaskStatus},  #{day.hospitalId},  #{day.provinceCode},  #{day.cityCode},  #{day.areaCode},  null, now(), now()
+                )
+            </foreach>
+        </insert>
 
 </mapper>

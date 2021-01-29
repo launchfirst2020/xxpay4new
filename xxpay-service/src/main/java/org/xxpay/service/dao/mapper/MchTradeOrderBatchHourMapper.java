@@ -10,4 +10,10 @@ public interface MchTradeOrderBatchHourMapper extends BaseMapper<MchTradeOrderBa
 
     //查找支付趋势数据
     List<MchTradeOrderBatchHour> selectPayTrend(Map conditon);
+
+    //查询交易日小时时段的跑批数据
+    List<MchTradeOrderBatchHour> selectHourBatch(Map<String, Object> paramMap);
+
+    //查询小时时段跑批数据
+    int insertHourBatch(List<MchTradeOrderBatchHour> list);
 }

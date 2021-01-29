@@ -1026,7 +1026,7 @@ public class DataController extends BaseController {
                 return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_AREACODE_REQUIRED);
             }
             paramMap.put("areaCode", areaCode);
-        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_PLATFORM_OPERATORS) {
             //运营平台管理员查看所有的
         }else {
             return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_BATCH_VIEW_ROLE_ERR);
@@ -1045,30 +1045,30 @@ public class DataController extends BaseController {
         List<Long> aliPaySumRealAmount = new ArrayList<Long>();   //支付宝收款集合
         List<Long> aliPayCuntTrade = new ArrayList<Long>();   //支付宝收款笔数集合
         List<Long> aliPayTradePrice = new ArrayList<Long>();   //支付宝收款单价集合
-        MchTradeOrderBatchHour hour01 = tempMap.get("01");
-        MchTradeOrderBatchHour hour02 = tempMap.get("02");
-        MchTradeOrderBatchHour hour03 = tempMap.get("03");
-        MchTradeOrderBatchHour hour04 = tempMap.get("04");
-        MchTradeOrderBatchHour hour05 = tempMap.get("05");
-        MchTradeOrderBatchHour hour06 = tempMap.get("06");
-        MchTradeOrderBatchHour hour07 = tempMap.get("07");
-        MchTradeOrderBatchHour hour08 = tempMap.get("08");
-        MchTradeOrderBatchHour hour09 = tempMap.get("09");
-        MchTradeOrderBatchHour hour10 = tempMap.get("10");
-        MchTradeOrderBatchHour hour11 = tempMap.get("11");
-        MchTradeOrderBatchHour hour12 = tempMap.get("12");
-        MchTradeOrderBatchHour hour13 = tempMap.get("13");
-        MchTradeOrderBatchHour hour14 = tempMap.get("14");
-        MchTradeOrderBatchHour hour15 = tempMap.get("15");
-        MchTradeOrderBatchHour hour16 = tempMap.get("16");
-        MchTradeOrderBatchHour hour17 = tempMap.get("17");
-        MchTradeOrderBatchHour hour18 = tempMap.get("18");
-        MchTradeOrderBatchHour hour19 = tempMap.get("19");
-        MchTradeOrderBatchHour hour20 = tempMap.get("20");
-        MchTradeOrderBatchHour hour21 = tempMap.get("21");
-        MchTradeOrderBatchHour hour22 = tempMap.get("22");
-        MchTradeOrderBatchHour hour23 = tempMap.get("23");
-        MchTradeOrderBatchHour hour24 = tempMap.get("24");
+        MchTradeOrderBatchHour hour01 = checkBatchHour(tempMap.get("01"));
+        MchTradeOrderBatchHour hour02 = checkBatchHour(tempMap.get("02"));
+        MchTradeOrderBatchHour hour03 = checkBatchHour(tempMap.get("03"));
+        MchTradeOrderBatchHour hour04 = checkBatchHour(tempMap.get("04"));
+        MchTradeOrderBatchHour hour05 = checkBatchHour(tempMap.get("05"));
+        MchTradeOrderBatchHour hour06 = checkBatchHour(tempMap.get("06"));
+        MchTradeOrderBatchHour hour07 = checkBatchHour(tempMap.get("07"));
+        MchTradeOrderBatchHour hour08 = checkBatchHour(tempMap.get("08"));
+        MchTradeOrderBatchHour hour09 = checkBatchHour(tempMap.get("09"));
+        MchTradeOrderBatchHour hour10 = checkBatchHour(tempMap.get("10"));
+        MchTradeOrderBatchHour hour11 = checkBatchHour(tempMap.get("11"));
+        MchTradeOrderBatchHour hour12 = checkBatchHour(tempMap.get("12"));
+        MchTradeOrderBatchHour hour13 = checkBatchHour(tempMap.get("13"));
+        MchTradeOrderBatchHour hour14 = checkBatchHour(tempMap.get("14"));
+        MchTradeOrderBatchHour hour15 = checkBatchHour(tempMap.get("15"));
+        MchTradeOrderBatchHour hour16 = checkBatchHour(tempMap.get("16"));
+        MchTradeOrderBatchHour hour17 = checkBatchHour(tempMap.get("17"));
+        MchTradeOrderBatchHour hour18 = checkBatchHour(tempMap.get("18"));
+        MchTradeOrderBatchHour hour19 = checkBatchHour(tempMap.get("19"));
+        MchTradeOrderBatchHour hour20 = checkBatchHour(tempMap.get("20"));
+        MchTradeOrderBatchHour hour21 = checkBatchHour(tempMap.get("21"));
+        MchTradeOrderBatchHour hour22 = checkBatchHour(tempMap.get("22"));
+        MchTradeOrderBatchHour hour23 = checkBatchHour(tempMap.get("23"));
+        MchTradeOrderBatchHour hour24 = checkBatchHour(tempMap.get("24"));
 
         //微信收款金额(1-24点)
         wxSumRealAmount.add(hour01.getWxSumRealAmount());
@@ -1261,7 +1261,7 @@ public class DataController extends BaseController {
                 return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_AREACODE_REQUIRED);
             }
             paramMap.put("areaCode", areaCode);
-        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_PLATFORM_OPERATORS) {
             //运营平台管理员查看所有的
         }else {
             return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_BATCH_VIEW_ROLE_ERR);
@@ -1342,7 +1342,7 @@ public class DataController extends BaseController {
                 return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_AREACODE_REQUIRED);
             }
             paramMap.put("areaCode", areaCode);
-        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_PLATFORM_OPERATORS) {
             //运营平台管理员查看所有的
         }else {
             return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_BATCH_VIEW_ROLE_ERR);
@@ -1428,7 +1428,7 @@ public class DataController extends BaseController {
                 return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_AREACODE_REQUIRED);
             }
             paramMap.put("areaCode", areaCode);
-        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_PLATFORM_OPERATORS) {
             //运营平台管理员查看所有的
         }else {
             return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_BATCH_VIEW_ROLE_ERR);
@@ -1511,7 +1511,7 @@ public class DataController extends BaseController {
                 return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_AREACODE_REQUIRED);
             }
             paramMap.put("areaCode", areaCode);
-        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_PLATFORM_OPERATORS) {
             //运营平台管理员查看所有的
         }else {
             return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_BATCH_VIEW_ROLE_ERR);
@@ -1597,7 +1597,7 @@ public class DataController extends BaseController {
                 return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_AREACODE_REQUIRED);
             }
             paramMap.put("areaCode", areaCode);
-        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) { //运营平台
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_PLATFORM_OPERATORS) { //运营平台
             //运营平台管理员查看所有的
         }else {
             return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_BATCH_VIEW_ROLE_ERR);
@@ -1636,7 +1636,7 @@ public class DataController extends BaseController {
                 return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HIS_AREACODE_REQUIRED);
             }
             paramMap.put("areaCode", areaCode);
-        }else if (miniRole == MchConstant.MCH_MINI_ROLE_HEALTH_COMMISSION) {
+        }else if (miniRole == MchConstant.MCH_MINI_ROLE_PLATFORM_OPERATORS) {
             //运营平台管理员查看所有的
         }else {
             return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_BATCH_VIEW_ROLE_ERR);
@@ -1816,6 +1816,20 @@ public class DataController extends BaseController {
         return CollectionUtils.isEmpty(hospitalIds) ? 0l : hospitalIds.size();
     }
 
+    private MchTradeOrderBatchHour checkBatchHour(MchTradeOrderBatchHour batchHour) {
+        if (batchHour == null) {
+            batchHour = new MchTradeOrderBatchHour();
+            batchHour.setAliPayCuntTrade(0l);
+            batchHour.setAliPayRefundCount(0l);
+            batchHour.setAliPaySumRealAmount(0l);
+            batchHour.setAliPaySumRefundAmount(0l);
+            batchHour.setWxCuntTrade(0l);
+            batchHour.setWxRefundCunt(0l);
+            batchHour.setWxSumRealAmount(0l);
+            batchHour.setWxSumRefundAmount(0l);
+        }
+        return batchHour;
+    }
     // ======================================================结束纳呈支付统计 ==========================================================================
 
 }
