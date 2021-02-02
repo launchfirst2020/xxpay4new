@@ -381,7 +381,7 @@ public class MchTradeOrderController extends BaseController {
     public XxPayResponse selectMchBatch() {
         String batchDate = getValStringRequired("batchDate");
         Map<String, Object> paramMap = new HashMap<String, Object>();
-        paramMap.put("batchDate", batchDate);
+        paramMap.put("payDate", batchDate);
         byte miniRole = getUser().getMiniRole();
         if (miniRole == MchConstant.MCH_MINI_ROLE_MCHCHANT_ADMIN) { //商户管理员
             Long hospitalId = getUser().getHospitalId();
