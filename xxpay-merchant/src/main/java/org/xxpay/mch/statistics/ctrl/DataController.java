@@ -985,6 +985,11 @@ public class DataController extends BaseController {
                     resultMap.put("aliPayCuntTrade", aliPayCuntTrade);
                 }
             }
+        }else {
+            resultMap.put("wxSumRealAmount", 0l);
+            resultMap.put("wxCuntTrade", 0l);
+            resultMap.put("aliPaySumRealAmount", 0l);
+            resultMap.put("aliPayCuntTrade", 0l);
         }
 
         //退款金额
