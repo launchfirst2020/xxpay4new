@@ -37,7 +37,7 @@ public class ReissuePayScheduled extends ReissuceBase {
     /**
      * 支付订单批量补单任务
      */
-    //@Scheduled(cron="0 0/1 * * * ?") //每分钟执行一次
+    @Scheduled(cron="0 0/3 * * * ?") //每3分钟执行一次
     public void payReissueTask() {
         String logPrefix = "【支付补单】";
         // 支付补单开关

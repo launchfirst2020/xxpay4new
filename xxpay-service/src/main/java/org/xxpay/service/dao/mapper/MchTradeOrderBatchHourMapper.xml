@@ -70,7 +70,7 @@
      </select>
 
     <!-- 插入日跑小时时段批数据 -->
-    <insert id="insertHourBatch" parameterType="org.xxpay.core.entity.MchTradeOrderBatchHour" >
+    <insert id="insertHourBatch" parameterType="org.xxpay.core.entity.MchTradeOrderBatchHour">
               insert into t_mch_trade_order_batch_hour(BatchId, BatchDate, Hour, WxSumRealAmount, WxSumRefundAmount, WxCuntTrade, WxRefundCunt,
                        AliPaySumRealAmount, AliPaySumRefundAmount, AliPayCuntTrade, AliPayRefundCount, BatchTaskStatus, HospitalId, ProvinceCode, CityCode,
                        AreaCode, Remark, CreateTime, UpdateTime)

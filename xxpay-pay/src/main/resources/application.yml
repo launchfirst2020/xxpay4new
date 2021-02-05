@@ -74,10 +74,16 @@ task:
   reissue.trans.ip: @task.reissue.trans.ip@
   reissue.agentpay.switch: @task.reissue.agentpay.switch@
   reissue.agentpay.ip: @task.reissue.agentpay.ip@
+  reissue.refund.switch: @task.reissue.refund.switch@
+  reissue.refund.ip: @task.reissue.refund.ip@
 
 sqlit:
   file:
     path: jdbc:sqlite:@sqlit.file.path@
+
+logging:
+  level:
+    org.xxpay.service.dao.mapper: debug
 
 
 

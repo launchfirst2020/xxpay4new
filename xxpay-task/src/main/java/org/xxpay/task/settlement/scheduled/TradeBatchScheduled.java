@@ -21,7 +21,7 @@ public class TradeBatchScheduled {
     @Autowired
     private RpcCommonService rpcCommonService;
 
-    @Scheduled(cron="0 10 2 * * ?")
+    @Scheduled(cron="0 12 2 * * ?")
     public void batchDailyCollectTask() {
         _log.info("开始商户交易订单数据按天跑批");
 
@@ -45,10 +45,10 @@ public class TradeBatchScheduled {
         }
         int result = rpcCommonService.rpcMchTradeOrderBatchService.insertDailyBatch(batchs);
 
-        _log.info("结束商户交易订单数据按天跑批, 插入数据条数: ", result);
+        _log.info("结束商户交易订单数据按天跑批, 插入数据条数: {}", result);
     }
 
-    @Scheduled(cron="0 30 2 * * ?")
+    @Scheduled(cron="0 32 2 * * ?")
     public void batchHourCollectTask() {
 
         _log.info("开始商户交易订单数据按小时跑批");
@@ -71,6 +71,6 @@ public class TradeBatchScheduled {
             batch.setBatchId(batchId);
         }
         int result = rpcCommonService.rpcMchTradeOrderBatchHourService.insertHourBatch(batchs);
-        _log.info("结束商户交易订单数据按时跑批, 插入数据条数: ", result);
+        _log.info("结束商户交易订单数据按时跑批, 插入数据条数: {}", result);
     }
 }

@@ -1,5 +1,7 @@
 package org.xxpay.core.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.xxpay.core.entity.MchRefundOrder;
 import org.xxpay.core.entity.MchTradeOrder;
@@ -20,5 +22,8 @@ public interface IMchRefundOrderService extends IService<MchRefundOrder> {
 
     /** 退款失败 **/
     void refundFail(String mchRefundId);
+
+    /**  分页查找商户退款表**/
+    IPage<MchRefundOrder> selectPage(IPage page, LambdaQueryWrapper<MchRefundOrder> queryWrapper);
 
 }

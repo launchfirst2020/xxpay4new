@@ -35,7 +35,7 @@ public class PayForHisController extends BaseController {
 
     @Autowired
     private RpcCommonService rpcCommonService;
-    
+
     /**
      * 对接his支付条形码付款
      * @param request

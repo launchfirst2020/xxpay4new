@@ -36,6 +36,12 @@ public class ReissuceBase {
     @Value("${task.reissue.pay.ip}")
     public String reissuePayTaskIp;		// 支付补单任务IP
 
+    @Value("${task.reissue.refund.switch}")
+    public String reissueRefundTaskSwitch;   //商户退款补单开关
+
+    @Value("${task.reissue.refund.ip}")
+    public String reissueRefundTaskIp;   //商户退款补单任务IP
+
     /**
      * 判断是否执行补单任务
      * @return
