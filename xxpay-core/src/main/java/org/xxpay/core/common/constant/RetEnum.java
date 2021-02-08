@@ -295,7 +295,12 @@ public enum RetEnum {
     RET_HIS_MCH_TRADE_ORDER_TO_HIS_AREACODE_REQUIRED(17017, "县区码值不能为空"),
     RET_HIS_MCH_TRADE_ORDER_SUPER_ADMIN_ROLE_ERR(17018, "角色为卫健委与平台运行商角色才能查询统计"),
     RET_HIS_MCH_TRADE_ORDER_TO_HISUSER_REQIURED(17019, "为确保支付可回查追溯性, 请输入收银员或医院收银管理员用户ID"),
-    RET_HIS_MCH_TRADE_ORDER_TO_HOSPITAL_REQIURED(17020, "为确保支付可回查追溯性, 请输入收银员或收银管理员对应的医院ID");
+    RET_HIS_MCH_TRADE_ORDER_TO_HOSPITAL_REQIURED(17020, "为确保支付可回查追溯性, 请输入收银员或收银管理员对应的医院ID"),
+    RET_HIS_MCH_REFUND_FAILURE(17021, "His退款失败"),
+    RET_HIS_PAY_BAT_CODE_FAILURE(17022, "his调用支付中心【条码支付】下单失败"),
+    RET_HIS_MCH_TRADE_ORDER_NO_EXISTS(17023, "商户交易订单不存在"),
+    RET_HIS_MCH_REFUND_ORDER_REQUIRED(17024, "商户退款订单号必须输入"),
+    RET_HIS_MCH_REFUND_ORDER_NO_EXISTS(17025, "商户退款订单不存在");
 
     private int code;
     private String message;

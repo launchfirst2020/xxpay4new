@@ -12,6 +12,7 @@ import org.xxpay.core.common.constant.MchConstant;
 import org.xxpay.core.common.constant.PayConstant;
 import org.xxpay.core.common.constant.PayEnum;
 import org.xxpay.core.common.constant.RetEnum;
+import org.xxpay.core.common.domain.XxPayResponse;
 import org.xxpay.core.common.domain.api.*;
 import org.xxpay.core.common.util.MyLog;
 import org.xxpay.core.common.util.PayDigestUtil;
@@ -23,6 +24,8 @@ import org.xxpay.pay.service.RpcCommonService;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class PayForHisController extends BaseController {
@@ -31,7 +34,8 @@ public class PayForHisController extends BaseController {
 
     //"http://localhost:8201/api";
     //@Value("${config.payUrl}")
-    private String payUrl = "http://localhost:8201/api";
+    //private String payUrl = "http://localhost:8201/api";
+    private String payUrl = "https://weixin.pay.ncmedical.cn/api";
 
     @Autowired
     private RpcCommonService rpcCommonService;
@@ -42,7 +46,7 @@ public class PayForHisController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/api/pay/his/create_order")
-    public AbstractRes payOrder(HttpServletRequest request) {
+    public XxPayResponse payOrder(HttpServletRequest request) {
         try {
             _log.info("###### 开始接收HIS统一下单请求 ######");
             String logPrefix = "【HIS系统统一下单】";
@@ -58,23 +62,23 @@ public class PayForHisController extends BaseController {
 
             //收银员或者收款管理员ID必须输入
             if (StringUtils.isBlank(hisUserId)) {
-                return ApiBuilder.bizError(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HISUSER_REQIURED);
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HISUSER_REQIURED);
             }
 
             //收银员医院ID必须输入
             if (hospitalId == null) {
-                return ApiBuilder.bizError(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HOSPITAL_REQIURED);
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_TO_HOSPITAL_REQIURED);
             }
 
             //条形码不能为空
             if (StringUtils.isBlank(extra)) {
-                return ApiBuilder.bizError(RetEnum.RET_HIS_PARAMETER_EXTRA_BAR_REQUIRED);
+                return XxPayResponse.build(RetEnum.RET_HIS_PARAMETER_EXTRA_BAR_REQUIRED);
             }
             String productId = String.valueOf(XXPayUtil.getProductIdByBarCode(extra));
             String mchOrderNo = requestParams.getString("mchOrderNo");
 
             if(org.springframework.util.StringUtils.isEmpty(amount) || org.springframework.util.StringUtils.isEmpty(productId) || org.springframework.util.StringUtils.isEmpty(mchOrderNo)){
-                return ApiBuilder.bizError(RetEnum.RET_HIS_PARAMETER_AMT_AND_PRODUCTID_AND_MCHORDERNO_REQUIRED);
+                return XxPayResponse.build(RetEnum.RET_HIS_PARAMETER_AMT_AND_PRODUCTID_AND_MCHORDERNO_REQUIRED);
             }
 
             //金额转换为  分 为单位
@@ -97,14 +101,14 @@ public class PayForHisController extends BaseController {
 
             MchInfo mchInfo = rpcCommonService.rpcMchInfoService.findByMchId(Long.parseLong(mchId));
             if(mchInfo == null) {
-                return ApiBuilder.bizError(RetEnum.RET_HIS_MCHID_REQUIRED, mchId);
+                return XxPayResponse.build(RetEnum.RET_HIS_MCHID_REQUIRED, mchId);
             }
             if(mchInfo.getStatus() != 1) {
-                return ApiBuilder.bizError(RetEnum.RET_HIS_MCH_STATE_ERROR, mchId);
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_STATE_ERROR, mchId);
             }
             String mchKey = mchInfo.getPrivateKey();
             if (StringUtils.isBlank(mchKey)) {
-                return ApiBuilder.bizError(RetEnum.RET_HIS_MCH_KEY_REQUIRED, mchId);
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_KEY_REQUIRED, mchId);
             }
 
             SysUser sysUser = rpcCommonService.rpcSysService.findByUserName(mchInfo.getLoginUserName());
@@ -120,7 +124,7 @@ public class PayForHisController extends BaseController {
 
             //入库失败
             if (addMchTradeOrder == null) {
-                return ApiBuilder.bizError(RetEnum.RET_MCH_CREATE_TRADE_ORDER_FAIL);
+                return XxPayResponse.build(RetEnum.RET_MCH_CREATE_TRADE_ORDER_FAIL);
             }
 
             //tradeOrderId
@@ -153,18 +157,18 @@ public class PayForHisController extends BaseController {
                     _log.info("{} 下单失败,结果:{}", logPrefix, JSON.toJSONString(payRes));
 
                 }
-                return payRes;
+                return XxPayResponse.buildSuccess(payRes);
             }else {
-                return ApiBuilder.bizError("his调用支付中心【条码支付】下单失败");
+                return XxPayResponse.build(RetEnum.RET_HIS_PAY_BAT_CODE_FAILURE);
             }
         }catch (Exception e) {
             _log.error(e, "");
         }
-        return ApiBuilder.bizError(PayEnum.ERR_0010);
+        return XxPayResponse.build(RetEnum.RET_COMM_UNKNOWN_ERROR);
     }
 
-    @RequestMapping(value = "/api/pay/his/query_order")
-    public AbstractRes queryPayOrder(HttpServletRequest request) {
+    @RequestMapping(value = "/api/pay/his/query_order2")
+    public AbstractRes queryPayOrder2(HttpServletRequest request) {
         try {
             _log.info("###### 开始接收HIS查询支付订单请求 ######");
             String logPrefix = "【HIS系统查询支付订单】";
@@ -216,7 +220,7 @@ public class PayForHisController extends BaseController {
             }
         }
         catch(Exception ex) {
-            _log.error(ex, "");
+            _log.error(ex, ex.getMessage());
         }
         return ApiBuilder.bizError(PayEnum.ERR_0010);
     }
@@ -227,7 +231,7 @@ public class PayForHisController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/api/refund/his/create_order")
-    public AbstractRes refundOrder(HttpServletRequest request) {
+    public XxPayResponse refundOrder(HttpServletRequest request) {
         try {
             _log.info("###### 开始接收HIS退款请求 ######");
             String logPrefix = "【HIS系统发起退款】";
@@ -238,26 +242,27 @@ public class PayForHisController extends BaseController {
             String mchOrderNo = requestParams.getString("mchOrderNo");
             String mchRefundNo = requestParams.getString("mchRefundNo");
             String amount = requestParams.getString("amount");
+            String refundDesc = requestParams.getString("refundDesc");
 
             //金额转换为  分 为单位
             String amountParam = new BigDecimal(amount).multiply(new BigDecimal(100)).setScale(0).toString();
 
             MchTradeOrder dbOrder = rpcCommonService.rpcMchTradeOrderService.findByTradeOrderId(mchOrderNo);
             if(dbOrder == null){
-                return ApiBuilder.bizError(RetEnum.RET_MCH_TRADE_ORDER_NOT_EXIST);
+                return XxPayResponse.build(RetEnum.RET_MCH_TRADE_ORDER_NOT_EXIST);
             }
 
             //订单状态 不是支付成功， 也不是部分退款状态时，不允许发起退款
             if(dbOrder.getStatus() != MchConstant.TRADE_ORDER_STATUS_SUCCESS && dbOrder.getStatus() != MchConstant.TRADE_ORDER_STATUS_REFUND_PART){ //支付成功状态
-                return ApiBuilder.bizError(RetEnum.RET_MCH_REFUND_STATUS_NOT_SUPPORT);
+                return XxPayResponse.build(RetEnum.RET_MCH_REFUND_STATUS_NOT_SUPPORT);
             }
 
             if(dbOrder.getAmount() <= dbOrder.getRefundTotalAmount()  ) { //订单支付金额 <= 订单总退金额
-                return ApiBuilder.bizError(RetEnum.RET_MCH_ALREADY_REFUNDS);
+                return XxPayResponse.build(RetEnum.RET_MCH_ALREADY_REFUNDS);
             }
 
             if(Long.valueOf(amountParam) >  ( dbOrder.getAmount() - dbOrder.getRefundTotalAmount() ) ) { //退款金额 > （订单金额 - 总退款金额）
-                return ApiBuilder.bizError(RetEnum.RET_MCH_REFUNDAMOUNT_GT_PAYAMOUNT);
+                return XxPayResponse.build(RetEnum.RET_MCH_REFUNDAMOUNT_GT_PAYAMOUNT);
             }
 
             //判断当前订单 是否存在[退款中] 订单
@@ -265,7 +270,7 @@ public class PayForHisController extends BaseController {
                     new QueryWrapper<MchRefundOrder>().lambda().eq(MchRefundOrder::getTradeOrderId, mchOrderNo)
                             .eq(MchRefundOrder::getStatus, MchConstant.MCH_REFUND_STATUS_ING));
             if(ingRefundOrder > 0){
-                return ApiBuilder.bizError(RetEnum.RET_MCH_TRADE_HAS_REFUNDING_ORDER);
+                return XxPayResponse.build(RetEnum.RET_MCH_TRADE_HAS_REFUNDING_ORDER);
             }
 
             //插入商户退款表
@@ -277,7 +282,7 @@ public class PayForHisController extends BaseController {
             mchRefundOrder.setRefundAmount(Long.valueOf(amountParam)); //退款金额
             mchRefundOrder.setCurrency("CNY");  //币种
             mchRefundOrder.setStatus(MchConstant.MCH_REFUND_STATUS_ING);  //默认退款单状态： 退款中
-            mchRefundOrder.setRefundDesc("his冲销"); //退款原因
+            mchRefundOrder.setRefundDesc(refundDesc); //退款原因
             mchRefundOrder.setCreateTime(new Date());
             rpcCommonService.rpcMchRefundOrderService.save(mchRefundOrder);   //插入商户退款表记录
 
@@ -294,14 +299,14 @@ public class PayForHisController extends BaseController {
 
             MchInfo mchInfo = rpcCommonService.rpcMchInfoService.findByMchId(Long.parseLong(mchId));
             if(mchInfo == null) {
-                return ApiBuilder.bizError(RetEnum.RET_HIS_MCHID_REQUIRED, mchId);
+                return XxPayResponse.build(RetEnum.RET_HIS_MCHID_REQUIRED, mchId);
             }
             if(mchInfo.getStatus() != 1) {
-                return ApiBuilder.bizError(RetEnum.RET_HIS_MCH_STATE_ERROR, mchId);
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_STATE_ERROR, mchId);
             }
             String mchKey = mchInfo.getPrivateKey();
             if (StringUtils.isBlank(mchKey)) {
-                return ApiBuilder.bizError(RetEnum.RET_HIS_MCH_KEY_REQUIRED, mchId);
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_KEY_REQUIRED, mchId);
             }
 
             //生成签名数据
@@ -341,16 +346,16 @@ public class PayForHisController extends BaseController {
                 }else {
                     _log.info("{} his发起退款失败,结果:{}", logPrefix, JSON.toJSONString(refundOrderRes));
                 }
-                return refundOrderRes;
+                return XxPayResponse.buildSuccess(refundOrderRes);
 
             }else {
-                return ApiBuilder.bizError("his退款失败");
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_REFUND_FAILURE);
             }
         }
         catch(Exception ex) {
-            _log.error(ex, "");
+            _log.error(ex, ex.getMessage());
         }
-        return ApiBuilder.bizError(PayEnum.ERR_0010);
+        return XxPayResponse.build(RetEnum.RET_COMM_UNKNOWN_ERROR);
     }
 
 
@@ -359,8 +364,8 @@ public class PayForHisController extends BaseController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/api/refund/his/query_order")
-    public AbstractRes queryRefundOrder(HttpServletRequest request) {
+    @RequestMapping(value = "/api/refund/his/query_order2")
+    public AbstractRes queryRefundOrder2(HttpServletRequest request) {
         try {
             _log.info("###### 开始接收HIS查询退款订单请求 ######");
             String logPrefix = "【HIS系统查询退款订单】";
@@ -422,5 +427,76 @@ public class PayForHisController extends BaseController {
             _log.error(ex, "");
         }
         return ApiBuilder.bizError(PayEnum.ERR_0010);
+    }
+
+
+    /**
+     * 对接his支付查询
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/api/pay/his/query_order")
+    public XxPayResponse queryPayOrder(HttpServletRequest request) {
+        _log.info("###### 开始接收HIS查询支付订单请求 ######");
+        String logPrefix = "【HIS系统查询支付订单】";
+        JSONObject requestParams = getJsonParam(request);
+        _log.info("{}请求参数:{}", logPrefix, requestParams);
+        Long mchId = requestParams.getLong("mchId");
+        String mchOrderNo = requestParams.getString("mchOrderNo");
+        String payOrderId = requestParams.getString("payOrderId");
+
+        if (mchId == null
+                || (StringUtils.isBlank(mchOrderNo) && StringUtils.isBlank(payOrderId))) {
+            return XxPayResponse.build(RetEnum.RET_COMM_PARAM_ERROR);
+        }
+
+        MchTradeOrder mchTradeOrder = null;
+        if (StringUtils.isNotBlank(mchOrderNo)) {
+            mchTradeOrder = rpcCommonService.rpcMchTradeOrderService.findByMchIdAndTradeOrderId(mchId, mchOrderNo);
+        }else if (StringUtils.isNotBlank(payOrderId)){
+            mchTradeOrder = rpcCommonService.rpcMchTradeOrderService.findByMchIdAndPayOrderId(mchId, payOrderId);
+        }
+
+        if (mchTradeOrder == null) {
+            return XxPayResponse.build(RetEnum.RET_HIS_MCH_TRADE_ORDER_NO_EXISTS);
+        }
+
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("payOrderId", mchTradeOrder.getPayOrderId());
+        resultMap.put("mchOrderNo", mchTradeOrder.getTradeOrderId());
+        resultMap.put("tradeSuccTime", mchTradeOrder.getTradeSuccTime());
+        resultMap.put("amount", mchTradeOrder.getAmount());
+        resultMap.put("status", mchTradeOrder.getStatus());
+        return XxPayResponse.buildSuccess(resultMap);
+    }
+
+    @RequestMapping(value = "/api/refund/his/query_order")
+    public XxPayResponse queryRefundOrder(HttpServletRequest request) {
+        _log.info("###### 开始接收HIS查询退款订单请求 ######");
+        String logPrefix = "【HIS系统查询退款订单】";
+        JSONObject requestParams = getJsonParam(request);
+        _log.info("{}请求参数:{}", logPrefix, requestParams);
+        String mchRefundNo = requestParams.getString("mchRefundNo");
+
+        if ((StringUtils.isBlank(mchRefundNo))) {
+            return XxPayResponse.build(RetEnum.RET_HIS_MCH_REFUND_ORDER_REQUIRED);
+        }
+
+        MchRefundOrder mchRefundOrder = null;
+        if (StringUtils.isNotBlank(mchRefundNo)) {
+            mchRefundOrder = rpcCommonService.rpcMchRefundOrderService.getById(mchRefundNo);
+        }
+        if (mchRefundOrder == null) {
+            return XxPayResponse.build(RetEnum.RET_HIS_MCH_REFUND_ORDER_NO_EXISTS);
+        }
+
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("mchRefundOrderId", mchRefundOrder.getMchRefundOrderId());
+        resultMap.put("tradeOrderId", mchRefundOrder.getTradeOrderId());
+        resultMap.put("refundSuccTime", mchRefundOrder.getRefundSuccTime());
+        resultMap.put("payAmount", mchRefundOrder.getPayAmount());
+        resultMap.put("refundAmount", mchRefundOrder.getRefundAmount());
+        resultMap.put("status", mchRefundOrder.getStatus());
+        return XxPayResponse.buildSuccess(resultMap);
     }
 }
