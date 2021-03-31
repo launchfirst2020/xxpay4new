@@ -94,7 +94,7 @@ public class PayForHisController extends BaseController {
             paramMap.put("amount", amountParam);   //支付金额
             paramMap.put("notifyUrl", "https://mch.pay.ncmedical.cn/api/payment/notify");   //支付结果后台回调URL
             paramMap.put("subject", subject);  //商品主题
-            paramMap.put("body", PayConstant.PAY_PRODUCT_WX_BAR == Integer.parseInt(productId) ? "收款微信条码支付" : "收款支付宝条码支付");   //商品描述信息
+            paramMap.put("body", StringUtils.isNotBlank(body) ? body : (PayConstant.PAY_PRODUCT_WX_BAR == Integer.parseInt(productId) ? "收款微信条码支付" : "收款支付宝条码支付"));   //商品描述信息
             paramMap.put("extra", extra);  //附加参数 条形码
             paramMap.put("clientIp", clientIp);   //客户端IP
             paramMap.put("device", "his");   //客户端设备

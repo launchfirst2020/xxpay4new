@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.xxpay.service.dao.mapper.AlipayTradeDetailsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.xxpay.core.entity.AlipayTradeDetails">
+        <result column="channelorderno" property="channelorderno" />
+        <result column="payorderid" property="payorderid" />
+        <result column="bustype" property="bustype" />
+        <result column="subject" property="subject" />
+        <result column="ordercreatetime" property="ordercreatetime" />
+        <result column="orderendtime" property="orderendtime" />
+        <result column="storeno" property="storeno" />
+        <result column="storename" property="storename" />
+        <result column="operatorname" property="operatorname" />
+        <result column="device" property="device" />
+        <result column="accountnofrom" property="accountnofrom" />
+        <result column="orderamount" property="orderamount" />
+        <result column="amount" property="amount" />
+        <result column="alipayredenvelope" property="alipayredenvelope" />
+        <result column="jifenbao" property="jifenbao" />
+        <result column="alipaydiscount" property="alipaydiscount" />
+        <result column="discountamount" property="discountamount" />
+        <result column="juanhexiao" property="juanhexiao" />
+        <result column="juan" property="juan" />
+        <result column="redenvelopecons" property="redenvelopecons" />
+        <result column="cardconsamount" property="cardconsamount" />
+        <result column="refundbatchno" property="refundbatchno" />
+        <result column="servicecharge" property="servicecharge" />
+        <result column="profit" property="profit" />
+        <result column="tradedate" property="tradedate" />
+        <result column="areacode" property="areacode" />
+        <result column="batchno" property="batchno" />
+        <result column="hospitalid" property="hospitalid" />
+        <result column="hospitalname" property="hospitalname" />
+        <result column="remark" property="remark" />
+        <result column="createtime" property="createtime" />
+        <result column="updatetime" property="updatetime" />
+    </resultMap>
+
+    <!-- 批量插入支付宝交易信息 -->
+    <insert id="insertBatch" parameterType="java.util.List" >
+        insert into t_alipay_trade_details (channelorderno, payorderid, bustype, subject, ordercreatetime, orderendtime, storeno, storename,  operatorname, device,
+        accountnofrom, orderamount, amount, alipayredenvelope, jifenbao, alipaydiscount, discountamount, juanhexiao, juan, redenvelopecons,
+        cardconsamount, refundbatchno, servicecharge, profit, tradedate, areacode, batchno, hospitalid, hospitalname, remark, createtime, updatetime)
+        values
+        <foreach collection="list" item="detail" index="index" separator=",">
+            (
+            #{detail.channelorderno,jdbcType=VARCHAR},
+            #{detail.payorderid,jdbcType=VARCHAR},
+            #{detail.bustype,jdbcType=VARCHAR},
+            #{detail.subject,jdbcType=VARCHAR},
+            #{detail.ordercreatetime,jdbcType=VARCHAR},
+            #{detail.orderendtime,jdbcType=VARCHAR},
+            #{detail.storeno,jdbcType=VARCHAR},
+            #{detail.storename,jdbcType=VARCHAR},
+            #{detail.operatorname,jdbcType=VARCHAR},
+            #{detail.device,jdbcType=VARCHAR},
+            #{detail.accountnofrom,jdbcType=VARCHAR},
+            #{detail.orderamount,jdbcType=BIGINT},
+            #{detail.amount,jdbcType=BIGINT},
+            #{detail.alipayredenvelope,jdbcType=BIGINT},
+            #{detail.jifenbao,jdbcType=BIGINT},
+            #{detail.alipaydiscount,jdbcType=BIGINT},
+            #{detail.discountamount,jdbcType=BIGINT},
+            #{detail.juanhexiao,jdbcType=BIGINT},
+            #{detail.juan,jdbcType=VARCHAR},
+            #{detail.redenvelopecons,jdbcType=VARCHAR},
+            #{detail.cardconsamount,jdbcType=BIGINT},
+            #{detail.refundbatchno,jdbcType=VARCHAR},
+            #{detail.servicecharge,jdbcType=BIGINT},
+            #{detail.profit,jdbcType=BIGINT},
+            #{detail.tradedate,jdbcType=VARCHAR},
+            #{detail.areacode,jdbcType=INTEGER},
+            #{detail.batchno,jdbcType=VARCHAR},
+            #{detail.hospitalid,jdbcType=VARCHAR},
+            #{detail.hospitalname,jdbcType=VARCHAR},
+            #{detail.remark,jdbcType=VARCHAR},
+            #{detail.createtime,jdbcType=TIMESTAMP},
+            #{detail.updatetime,jdbcType=TIMESTAMP}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="removeAll" >
+        delete from t_alipay_trade_details
+    </delete>
+
+</mapper>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.xxpay.service.dao.mapper.WeixinTradeDetailsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.xxpay.core.entity.WeixinTradeDetails">
+        <result column="tradetime" property="tradetime" />
+        <result column="wxofficialaccount" property="wxofficialaccount" />
+        <result column="merchantid" property="merchantid" />
+        <result column="specmchid" property="specmchid" />
+        <result column="device" property="device" />
+        <result column="channelorderno" property="channelorderno" />
+        <result column="payorderid" property="payorderid" />
+        <result column="channeluser" property="channeluser" />
+        <result column="tradetype" property="tradetype" />
+        <result column="tradestatus" property="tradestatus" />
+        <result column="payingbank" property="payingbank" />
+        <result column="currency" property="currency" />
+        <result column="receivableamount" property="receivableamount" />
+        <result column="voucheramount" property="voucheramount" />
+        <result column="channelrefundno" property="channelrefundno" />
+        <result column="refundorderid" property="refundorderid" />
+        <result column="refundamount" property="refundamount" />
+        <result column="rechargerefuamount" property="rechargerefuamount" />
+        <result column="refundtype" property="refundtype" />
+        <result column="refundstatus" property="refundstatus" />
+        <result column="subject" property="subject" />
+        <result column="mchdatapackage" property="mchdatapackage" />
+        <result column="fee" property="fee" />
+        <result column="feeate" property="feeate" />
+        <result column="orderamount" property="orderamount" />
+        <result column="applyrefundamount" property="applyrefundamount" />
+        <result column="feeremark" property="feeremark" />
+        <result column="tradedate" property="tradedate" />
+        <result column="areacode" property="areacode" />
+        <result column="batchno" property="batchno" />
+        <result column="hospitalid" property="hospitalid" />
+        <result column="hospitalname" property="hospitalname" />
+        <result column="remark" property="remark" />
+        <result column="createtime" property="createtime" />
+        <result column="updatetime" property="updatetime" />
+    </resultMap>
+
+    <!-- 批量插入支付宝交易信息 -->
+    <insert id="insertBatch" parameterType="java.util.List" >
+        insert into t_weixin_trade_details (tradetime, wxofficialaccount, merchantid, specmchid, device, channelorderno, payorderid, channeluser, tradetype, tradestatus, payingbank, currency,
+              receivableamount, voucheramount, channelrefundno, refundorderid, refundamount, rechargerefuamount, refundtype, refundstatus, subject, mchdatapackage, fee, feeate, orderamount,
+              applyrefundamount, feeremark, tradedate, areacode, batchno, hospitalid, hospitalname, remark, createtime, updatetime)
+        values
+        <foreach collection="list" item="detail" index="index" separator=",">
+            (
+            #{detail.tradetime,jdbcType=VARCHAR},
+            #{detail.wxofficialaccount,jdbcType=VARCHAR},
+            #{detail.merchantid,jdbcType=VARCHAR},
+            #{detail.specmchid,jdbcType=VARCHAR},
+            #{detail.device,jdbcType=VARCHAR},
+            #{detail.channelorderno,jdbcType=VARCHAR},
+            #{detail.payorderid,jdbcType=VARCHAR},
+            #{detail.channeluser,jdbcType=VARCHAR},
+            #{detail.tradetype,jdbcType=VARCHAR},
+            #{detail.tradestatus,jdbcType=VARCHAR},
+            #{detail.payingbank,jdbcType=VARCHAR},
+            #{detail.currency,jdbcType=VARCHAR},
+            #{detail.receivableamount,jdbcType=BIGINT},
+            #{detail.voucheramount,jdbcType=BIGINT},
+            #{detail.channelrefundno,jdbcType=VARCHAR},
+            #{detail.refundorderid,jdbcType=VARCHAR},
+            #{detail.refundamount,jdbcType=BIGINT},
+            #{detail.rechargerefuamount,jdbcType=BIGINT},
+            #{detail.refundtype,jdbcType=VARCHAR},
+            #{detail.refundstatus,jdbcType=VARCHAR},
+            #{detail.subject,jdbcType=VARCHAR},
+            #{detail.mchdatapackage,jdbcType=VARCHAR},
+            #{detail.fee,jdbcType=BIGINT},
+            #{detail.feeate,jdbcType=VARCHAR},
+            #{detail.orderamount,jdbcType=BIGINT},
+            #{detail.applyrefundamount,jdbcType=BIGINT},
+            #{detail.feeremark,jdbcType=VARCHAR},
+            #{detail.tradedate,jdbcType=VARCHAR},
+            #{detail.areacode,jdbcType=INTEGER},
+            #{detail.batchno,jdbcType=VARCHAR},
+            #{detail.hospitalid,jdbcType=VARCHAR},
+            #{detail.hospitalname,jdbcType=VARCHAR},
+            #{detail.remark,jdbcType=VARCHAR},
+            #{detail.createtime,jdbcType=TIMESTAMP},
+            #{detail.updatetime,jdbcType=TIMESTAMP}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="removeAll" >
+        delete from t_weixin_trade_details
+    </delete>
+
+</mapper>
