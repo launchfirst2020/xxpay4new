@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xxpay.core.entity.CheckBatch;
 import org.xxpay.task.common.service.RpcCommonService;
+import org.xxpay.task.reconciliation.nc.entity.HospitalBean;
 
 /**
  * @author: dingzhiwei
@@ -22,6 +23,10 @@ public abstract class BaseBill extends BaseService implements BillInterface {
     public abstract String getChannelName();
 
     public JSONObject downloadBill(JSONObject param, CheckBatch batch) {
+        return null;
+    }
+
+    public JSONObject downloadBill(JSONObject param, CheckBatch batch, HospitalBean hospitalBean) {
         return null;
     }
 

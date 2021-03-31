@@ -186,6 +186,12 @@ public class CheckBatch implements Serializable {
     private String bankErrMsg;
 
     /**
+     * 行政地区编号， 县
+     */
+    @TableField("AreaCode")
+    private Integer areaCode;
+
+    /**
      * 创建时间
      *
      * @mbggenerated
@@ -423,10 +429,19 @@ public class CheckBatch implements Serializable {
         sb.append(", releaseStatus=").append(releaseStatus);
         sb.append(", checkFailMsg=").append(checkFailMsg);
         sb.append(", bankErrMsg=").append(bankErrMsg);
+        sb.append(", areaCode=").append(areaCode);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateTime=").append(updateTime);
         sb.append("]");
         return sb.toString();
+    }
+
+    public Integer getAreaCode() {
+        return areaCode;
+    }
+
+    public void setAreaCode(Integer areaCode) {
+        this.areaCode = areaCode;
     }
 
     @Override
@@ -463,6 +478,7 @@ public class CheckBatch implements Serializable {
             && (this.getReleaseStatus() == null ? other.getReleaseStatus() == null : this.getReleaseStatus().equals(other.getReleaseStatus()))
             && (this.getCheckFailMsg() == null ? other.getCheckFailMsg() == null : this.getCheckFailMsg().equals(other.getCheckFailMsg()))
             && (this.getBankErrMsg() == null ? other.getBankErrMsg() == null : this.getBankErrMsg().equals(other.getBankErrMsg()))
+            && (this.getAreaCode() == null ? other.getAreaCode() == null : this.getAreaCode().equals(other.getAreaCode()))
             && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
             && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
     }
@@ -493,6 +509,7 @@ public class CheckBatch implements Serializable {
         result = prime * result + ((getReleaseStatus() == null) ? 0 : getReleaseStatus().hashCode());
         result = prime * result + ((getCheckFailMsg() == null) ? 0 : getCheckFailMsg().hashCode());
         result = prime * result + ((getBankErrMsg() == null) ? 0 : getBankErrMsg().hashCode());
+        result = prime * result + ((getAreaCode() == null) ? 0 : getAreaCode().hashCode());
         result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
         result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
         return result;

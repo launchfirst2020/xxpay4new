@@ -13,5 +13,7 @@ public interface IMchHospitalService extends IService<MchHospital> {
 
     MchHospital findByHospitalId(Long hospitalId);
 
+    MchHospital findByMchId(Long mchId);
+
 }
 

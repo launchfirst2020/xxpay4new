@@ -2,6 +2,9 @@ package org.xxpay.task.reconciliation.channel;
 
 import com.alibaba.fastjson.JSONObject;
 import org.xxpay.core.entity.CheckBatch;
+import org.xxpay.task.reconciliation.nc.entity.HospitalBean;
+
+import java.util.List;
 
 /**
  * @author: dingzhiwei
@@ -11,5 +14,7 @@ import org.xxpay.core.entity.CheckBatch;
 public interface BillInterface {
 
     JSONObject downloadBill(JSONObject param, CheckBatch batch);
+
+    JSONObject downloadBill(JSONObject param, CheckBatch batch, HospitalBean hbean);
 
 }

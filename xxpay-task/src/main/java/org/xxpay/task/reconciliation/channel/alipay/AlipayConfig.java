@@ -19,6 +19,7 @@ public class AlipayConfig {
     private String alipayPublicKey; // 支付宝公钥
     private String alipayAccount;   // 支付宝账号
     private String reqUrl;          // 请求网关地址
+    private String appAuthToken;   //商户授权token
     // RSA2
     public static String SIGNTYPE = "RSA2";
     // 编码
@@ -37,6 +38,7 @@ public class AlipayConfig {
         this.alipayPublicKey = object.getString("alipayPublicKey");
         this.alipayAccount = object.getString("alipayAccount");
         this.reqUrl = object.getString("reqUrl");
+        this.appAuthToken = object.getString("appAuthToken");
     }
 
     public String getPid() {
@@ -85,6 +87,14 @@ public class AlipayConfig {
 
     public void setReqUrl(String reqUrl) {
         this.reqUrl = reqUrl;
+    }
+
+    public String getAppAuthToken() {
+        return appAuthToken;
+    }
+
+    public void setAppAuthToken(String appAuthToken) {
+        this.appAuthToken = appAuthToken;
     }
 }
 

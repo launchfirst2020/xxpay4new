@@ -24,6 +24,7 @@
     <result column="releaseStatus" property="releaseStatus" jdbcType="TINYINT" />
     <result column="checkFailMsg" property="checkFailMsg" jdbcType="VARCHAR" />
     <result column="bankErrMsg" property="bankErrMsg" jdbcType="VARCHAR" />
+    <result column="areaCode" property="areaCode" jdbcType="INTEGER" />
     <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
     <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -89,7 +90,7 @@
     id, batchNo, billDate, billType, handleStatus, bankType, channelMchId, mistakeCount, 
     unhandleMistakeCount, tradeCount, bankTradeCount, tradeAmount, bankTradeAmount, refundAmount, 
     bankRefundAmount, fee, bankFee, orgCheckFilePath, releaseCheckFilePath, releaseStatus, 
-    checkFailMsg, bankErrMsg, createTime, updateTime
+    checkFailMsg, bankErrMsg, areaCode, createTime, updateTime
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.xxpay.core.entity.CheckBatchExample" >
     select
@@ -137,7 +138,7 @@
       bankTradeAmount, refundAmount, bankRefundAmount, 
       fee, bankFee, orgCheckFilePath, 
       releaseCheckFilePath, releaseStatus, checkFailMsg, 
-      bankErrMsg, createTime, updateTime
+      bankErrMsg, areaCode, createTime, updateTime
       )
     values (#{id,jdbcType=BIGINT}, #{batchNo,jdbcType=VARCHAR}, #{billDate,jdbcType=DATE}, 
       #{billType,jdbcType=TINYINT}, #{handleStatus,jdbcType=TINYINT}, #{bankType,jdbcType=VARCHAR}, 
@@ -146,7 +147,7 @@
       #{bankTradeAmount,jdbcType=BIGINT}, #{refundAmount,jdbcType=BIGINT}, #{bankRefundAmount,jdbcType=BIGINT}, 
       #{fee,jdbcType=BIGINT}, #{bankFee,jdbcType=BIGINT}, #{orgCheckFilePath,jdbcType=VARCHAR}, 
       #{releaseCheckFilePath,jdbcType=VARCHAR}, #{releaseStatus,jdbcType=TINYINT}, #{checkFailMsg,jdbcType=VARCHAR}, 
-      #{bankErrMsg,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      #{bankErrMsg,jdbcType=VARCHAR}, #{areaCode,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="org.xxpay.core.entity.CheckBatch" >
@@ -217,6 +218,9 @@
       </if>
       <if test="bankErrMsg != null" >
         bankErrMsg,
+      </if>
+      <if test="areaCode != null" >
+        areaCode,
       </if>
       <if test="createTime != null" >
         createTime,
@@ -291,6 +295,9 @@
       </if>
       <if test="bankErrMsg != null" >
         #{bankErrMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="areaCode != null" >
+        #{areaCode,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -375,6 +382,9 @@
       <if test="record.bankErrMsg != null" >
         bankErrMsg = #{record.bankErrMsg,jdbcType=VARCHAR},
       </if>
+      <if test="record.areaCode != null" >
+        areaCode = #{record.areaCode,jdbcType=INTEGER},
+      </if>
       <if test="record.createTime != null" >
         createTime = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -410,6 +420,7 @@
       releaseStatus = #{record.releaseStatus,jdbcType=TINYINT},
       checkFailMsg = #{record.checkFailMsg,jdbcType=VARCHAR},
       bankErrMsg = #{record.bankErrMsg,jdbcType=VARCHAR},
+      areaCode = #{record.areaCode,jdbcType=INTEGER},
       createTime = #{record.createTime,jdbcType=TIMESTAMP},
       updateTime = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -482,6 +493,9 @@
       <if test="bankErrMsg != null" >
         bankErrMsg = #{bankErrMsg,jdbcType=VARCHAR},
       </if>
+      <if test="areaCode != null" >
+        areaCode = #{areaCode,jdbcType=INTEGER},
+      </if>
       <if test="createTime != null" >
         createTime = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -514,6 +528,7 @@
       releaseStatus = #{releaseStatus,jdbcType=TINYINT},
       checkFailMsg = #{checkFailMsg,jdbcType=VARCHAR},
       bankErrMsg = #{bankErrMsg,jdbcType=VARCHAR},
+      areaCode = #{areaCode,jdbcType=INTEGER},
       createTime = #{createTime,jdbcType=TIMESTAMP},
       updateTime = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}

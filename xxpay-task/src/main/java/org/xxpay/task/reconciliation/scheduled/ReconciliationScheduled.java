@@ -12,6 +12,7 @@ import org.xxpay.core.common.util.MyLog;
 import org.xxpay.core.common.util.MySeq;
 import org.xxpay.core.common.util.XXPayUtil;
 import org.xxpay.core.entity.CheckBatch;
+import org.xxpay.service.dao.mapper.CheckBatchMapper;
 import org.xxpay.task.common.service.RpcCommonService;
 import org.xxpay.task.reconciliation.channel.BillInterface;
 import org.xxpay.task.reconciliation.entity.ReconciliationEntity;
@@ -28,7 +29,7 @@ import java.util.Map;
  * @date: 17/12/3
  * @description:
  */
-@Component
+//@Component
 public class ReconciliationScheduled {
 
     private static final MyLog _log = MyLog.getLog(ReconciliationScheduled.class);
@@ -37,7 +38,7 @@ public class ReconciliationScheduled {
     private ReconciliationService reconciliationService;
 
     //@Scheduled(cron="0 0/1 * * * ?") // 每分钟执行一次
-    @Scheduled(cron="0 15 10 ? * *")   // 每日10:15执行
+    //@Scheduled(cron="0 15 10 ? * *")   // 每日10:15执行
     public void settDailyCollectTask() {
         _log.info("执行对账,开始...");
 

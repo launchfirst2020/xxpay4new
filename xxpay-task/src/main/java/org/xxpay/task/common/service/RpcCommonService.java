@@ -51,4 +51,13 @@ public class RpcCommonService {
     @Autowired
     public IMchTradeOrderBatchHourService rpcMchTradeOrderBatchHourService;
 
+    @Autowired
+    public IChannelTaskService rpcChannelTaskService;
+
+    @Autowired
+    public IBankTradeDetailService rpcBankTradeDetailService;
+
+    @Autowired
+    public IMchHospitalService rpcMchHospitalService;
+
 }

@@ -31,6 +31,14 @@ public class MchHospitalServiceImpl extends ServiceImpl<MchHospitalMapper, MchHo
         return mchHospitalMapper.selectById(hospitalId);
     }
 
+    @Override
+    public MchHospital findByMchId(Long mchId) {
+        MchHospital mchHospital = new MchHospital();
+        mchHospital.setMchId(mchId);
+        LambdaQueryWrapper<MchHospital> queryWrapper = getQueryWrapper(mchHospital);
+        return getOne(queryWrapper);
+    }
+
     /** 生成[wrapper]查询条件 **/
     private LambdaQueryWrapper<MchHospital> getQueryWrapper(MchHospital mchHospital){
 

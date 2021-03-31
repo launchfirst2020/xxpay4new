@@ -19,7 +19,7 @@
                         <div class="layui-form" style="float:right; margin-bottom: 10px;">
                             <div class="layui-form-item" style="margin:0;">
                                 <div class="layui-input-inline">
-                                    <input type="text" name="infoId" id="infoId" placeholder="商户/代理商ID" autocomplete="off" class="layui-input">
+                                    <input type="text" name="infoId" id="infoId" placeholder="医院ID" autocomplete="off" class="layui-input">
                                 </div>
                                 <div class="layui-input-inline">
                                     <input type="text" name="billDate" id="billDate" placeholder="对账日期" autocomplete="off" class="layui-input">
@@ -84,11 +84,11 @@
                     fixed: 'left'
                 }, {
                     field: 'billDate',
-                    title: '对账日期',
+                    title: '对账日期2',
                     templet: '<div>{{ layui.util.toDateString(d.createTime, "yyyy-MM-dd") }}</div>'
                 }, {
                     field: 'infoId',
-                    title: '商户/代理商ID'
+                    title: '医院ID'
                 },  {
                     field: 'mchType',
                     title: '商户类型',

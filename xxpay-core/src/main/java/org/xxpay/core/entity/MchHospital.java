@@ -25,6 +25,14 @@ public class MchHospital implements Serializable {
     private String hospitalName;
 
     /**
+     * 平台商户ID
+     *
+     * @mbggenerated
+     */
+    @TableField("MchId")
+    private Long mchId;
+
+    /**
      * 省编码
      */
     @TableField("ProvinceCode")
@@ -102,6 +110,14 @@ public class MchHospital implements Serializable {
         return cityCode;
     }
 
+    public Long getMchId() {
+        return mchId;
+    }
+
+    public void setMchId(Long mchId) {
+        this.mchId = mchId;
+    }
+
     public void setCityCode(Integer cityCode) {
         this.cityCode = cityCode;
     }
@@ -154,6 +170,7 @@ public class MchHospital implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", hospitalId=").append(hospitalId);
         sb.append(", hospitalName=").append(hospitalName);
+        sb.append(", mchId=").append(mchId);
         sb.append(",provinceCode =").append(provinceCode);
         sb.append(", cityCode=").append(cityCode);
         sb.append(", areaCode=").append(areaCode);
@@ -179,6 +196,7 @@ public class MchHospital implements Serializable {
         MchHospital other = (MchHospital) that;
         return (this.getHospitalId() == null ? other == null : this.getHospitalId().equals(other.getHospitalId()))
                 && (this.getHospitalName() == null ? other.getHospitalName() == null : this.getHospitalName().equals(other.getHospitalName()))
+                && (this.getMchId() == null ? other.getMchId() == null : this.getMchId().equals(other.getMchId()))
                 && (this.getProvinceCode() == null ? other.getProvinceCode() == null : this.getProvinceCode().equals(other.getProvinceCode()))
                 && (this.getCityCode() == null ? other.getCityCode() == null : this.getCityCode().equals(other.getCityCode()))
                 && (this.getAreaCode() == null ? other.getAreaCode() == null : this.getAreaCode().equals(other.getAreaCode()))
@@ -194,6 +212,7 @@ public class MchHospital implements Serializable {
         int result = 1;
         result = prime * result + ((getHospitalId() == null) ? 0 : getHospitalId().hashCode());
         result = prime * result + ((getHospitalName() == null) ? 0 : getHospitalName().hashCode());
+        result = prime * result + ((getMchId() == null) ? 0 : getMchId().hashCode());
         result = prime * result + ((getProvinceCode() == null) ? 0 : getProvinceCode().hashCode());
         result = prime * result + ((getCityCode() == null) ? 0 : getCityCode().hashCode());
         result = prime * result + ((getAreaCode() == null) ? 0 : getAreaCode().hashCode());
