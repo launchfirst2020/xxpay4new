@@ -12,10 +12,18 @@
     <result column="mistakeCount" property="mistakeCount" jdbcType="INTEGER" />
     <result column="unhandleMistakeCount" property="unhandleMistakeCount" jdbcType="INTEGER" />
     <result column="tradeCount" property="tradeCount" jdbcType="INTEGER" />
+    <result column="tradeReceiveCount" property="tradeReceiveCount" jdbcType="INTEGER" />
+    <result column="tradeRefundCount" property="tradeRefundCount" jdbcType="INTEGER" />
+    <result column="hisTradeReceiveCount" property="hisTradeReceiveCount" jdbcType="INTEGER" />
+    <result column="hisTradeRefundCount" property="hisTradeRefundCount" jdbcType="INTEGER" />
     <result column="bankTradeCount" property="bankTradeCount" jdbcType="INTEGER" />
+    <result column="bankTradeReceiveCount" property="bankTradeReceiveCount" jdbcType="INTEGER" />
+    <result column="bankTradeRefundCount" property="bankTradeRefundCount" jdbcType="INTEGER" />
     <result column="tradeAmount" property="tradeAmount" jdbcType="BIGINT" />
+    <result column="hisTradeReceiveAmount" property="hisTradeReceiveAmount" jdbcType="BIGINT" />
     <result column="bankTradeAmount" property="bankTradeAmount" jdbcType="BIGINT" />
     <result column="refundAmount" property="refundAmount" jdbcType="BIGINT" />
+    <result column="hisTradeRefundAmount" property="hisTradeRefundAmount" jdbcType="BIGINT" />
     <result column="bankRefundAmount" property="bankRefundAmount" jdbcType="BIGINT" />
     <result column="fee" property="fee" jdbcType="BIGINT" />
     <result column="bankFee" property="bankFee" jdbcType="BIGINT" />
@@ -25,6 +33,8 @@
     <result column="checkFailMsg" property="checkFailMsg" jdbcType="VARCHAR" />
     <result column="bankErrMsg" property="bankErrMsg" jdbcType="VARCHAR" />
     <result column="areaCode" property="areaCode" jdbcType="INTEGER" />
+    <result column="hospitalId" property="hospitalId" jdbcType="BIGINT" />
+    <result column="hospitalName" property="hospitalName" jdbcType="VARCHAR" />
     <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
     <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -88,9 +98,10 @@
   </sql>
   <sql id="Base_Column_List" >
     id, batchNo, billDate, billType, handleStatus, bankType, channelMchId, mistakeCount, 
-    unhandleMistakeCount, tradeCount, bankTradeCount, tradeAmount, bankTradeAmount, refundAmount, 
+    unhandleMistakeCount, tradeCount, tradeReceiveCount, tradeRefundCount, hisTradeReceiveCount, hisTradeRefundCount,
+    bankTradeCount, bankTradeReceiveCount, bankTradeRefundCount, tradeAmount, hisTradeReceiveAmount, bankTradeAmount, refundAmount, hisTradeRefundAmount,
     bankRefundAmount, fee, bankFee, orgCheckFilePath, releaseCheckFilePath, releaseStatus, 
-    checkFailMsg, bankErrMsg, areaCode, createTime, updateTime
+    checkFailMsg, bankErrMsg, areaCode, hospitalId, hospitalName, createTime, updateTime
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.xxpay.core.entity.CheckBatchExample" >
     select
@@ -134,20 +145,25 @@
     insert into t_check_batch (id, batchNo, billDate, 
       billType, handleStatus, bankType, 
       channelMchId, mistakeCount, unhandleMistakeCount, 
-      tradeCount, bankTradeCount, tradeAmount, 
-      bankTradeAmount, refundAmount, bankRefundAmount, 
+      tradeCount, tradeReceiveCount, tradeRefundCount, hisTradeReceiveCount, hisTradeRefundCount, bankTradeCount, bankTradeReceiveCount,
+      bankTradeRefundCount, tradeAmount, hisTradeReceiveAmount,
+      bankTradeAmount, refundAmount, hisTradeRefundAmount, bankRefundAmount,
       fee, bankFee, orgCheckFilePath, 
       releaseCheckFilePath, releaseStatus, checkFailMsg, 
-      bankErrMsg, areaCode, createTime, updateTime
+      bankErrMsg, areaCode, hospitalId, hospitalName, createTime, updateTime
       )
     values (#{id,jdbcType=BIGINT}, #{batchNo,jdbcType=VARCHAR}, #{billDate,jdbcType=DATE}, 
       #{billType,jdbcType=TINYINT}, #{handleStatus,jdbcType=TINYINT}, #{bankType,jdbcType=VARCHAR}, 
       #{channelMchId,jdbcType=VARCHAR}, #{mistakeCount,jdbcType=INTEGER}, #{unhandleMistakeCount,jdbcType=INTEGER}, 
-      #{tradeCount,jdbcType=INTEGER}, #{bankTradeCount,jdbcType=INTEGER}, #{tradeAmount,jdbcType=BIGINT}, 
-      #{bankTradeAmount,jdbcType=BIGINT}, #{refundAmount,jdbcType=BIGINT}, #{bankRefundAmount,jdbcType=BIGINT}, 
+      #{tradeCount,jdbcType=INTEGER}, #{tradeReceiveCount,jdbcType=INTEGER}, #{tradeRefundCount,jdbcType=INTEGER},
+      #{hisTradeReceiveCount,jdbcType=INTEGER}, #{hisTradeRefundCount,jdbcType=INTEGER},
+      #{bankTradeCount,jdbcType=INTEGER}, #{bankTradeReceiveCount,jdbcType=INTEGER}, #{bankTradeRefundCount,jdbcType=INTEGER},
+      #{tradeAmount,jdbcType=BIGINT}, #{hisTradeReceiveAmount,jdbcType=BIGINT}, #{bankTradeAmount,jdbcType=BIGINT},
+      #{refundAmount,jdbcType=BIGINT},  #{hisTradeRefundAmount,jdbcType=BIGINT}, #{bankRefundAmount,jdbcType=BIGINT},
       #{fee,jdbcType=BIGINT}, #{bankFee,jdbcType=BIGINT}, #{orgCheckFilePath,jdbcType=VARCHAR}, 
       #{releaseCheckFilePath,jdbcType=VARCHAR}, #{releaseStatus,jdbcType=TINYINT}, #{checkFailMsg,jdbcType=VARCHAR}, 
-      #{bankErrMsg,jdbcType=VARCHAR}, #{areaCode,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      #{bankErrMsg,jdbcType=VARCHAR}, #{areaCode,jdbcType=INTEGER}, #{hospitalId,jdbcType=BIGINT}, #{hospitalName,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="org.xxpay.core.entity.CheckBatch" >
@@ -183,18 +199,56 @@
       <if test="tradeCount != null" >
         tradeCount,
       </if>
+
+
+
+
+
+
+      <if test="tradeReceiveCount != null" >
+        tradeReceiveCount,
+      </if>
+      <if test="tradeRefundCount != null" >
+        tradeRefundCount,
+      </if>
+      <if test="hisTradeReceiveCount != null" >
+        hisTradeReceiveCount,
+      </if>
+      <if test="hisTradeRefundCount != null" >
+        hisTradeRefundCount,
+      </if>
+
       <if test="bankTradeCount != null" >
         bankTradeCount,
       </if>
+
+      <if test="bankTradeReceiveCount != null" >
+        bankTradeReceiveCount,
+      </if>
+
+      <if test="bankTradeRefundCount != null" >
+        bankTradeRefundCount,
+      </if>
+
       <if test="tradeAmount != null" >
         tradeAmount,
       </if>
+
+      <if test="hisTradeReceiveAmount != null" >
+        hisTradeReceiveAmount,
+      </if>
+
       <if test="bankTradeAmount != null" >
         bankTradeAmount,
       </if>
       <if test="refundAmount != null" >
         refundAmount,
       </if>
+
+      <if test="hisTradeRefundAmount != null" >
+        hisTradeRefundAmount,
+      </if>
+
       <if test="bankRefundAmount != null" >
         bankRefundAmount,
       </if>
@@ -222,6 +276,15 @@
       <if test="areaCode != null" >
         areaCode,
       </if>
+
+      <if test="hospitalId != null" >
+        hospitalId,
+      </if>
+
+      <if test="hospitalName != null" >
+        hospitalName,
+      </if>
+
       <if test="createTime != null" >
         createTime,
       </if>
@@ -260,17 +323,42 @@
       <if test="tradeCount != null" >
         #{tradeCount,jdbcType=INTEGER},
       </if>
+
+      <if test="tradeReceiveCount != null" >
+        #{tradeReceiveCount,jdbcType=INTEGER},
+      </if>
+      <if test="tradeRefundCount != null" >
+        #{tradeRefundCount,jdbcType=INTEGER},
+      </if>
+      <if test="hisTradeReceiveCount != null" >
+        #{hisTradeReceiveCount,jdbcType=INTEGER},
+      </if>
+      <if test="hisTradeRefundCount != null" >
+        #{hisTradeRefundCount,jdbcType=INTEGER},
+      </if>
       <if test="bankTradeCount != null" >
         #{bankTradeCount,jdbcType=INTEGER},
       </if>
+      <if test="bankTradeReceiveCount != null" >
+        #{bankTradeReceiveCount,jdbcType=INTEGER},
+      </if>
+      <if test="bankTradeRefundCount != null" >
+        #{bankTradeRefundCount,jdbcType=INTEGER},
+      </if>
       <if test="tradeAmount != null" >
         #{tradeAmount,jdbcType=BIGINT},
+      </if>
+      <if test="hisTradeReceiveAmount != null" >
+        #{hisTradeReceiveAmount,jdbcType=BIGINT},
       </if>
       <if test="bankTradeAmount != null" >
         #{bankTradeAmount,jdbcType=BIGINT},
       </if>
       <if test="refundAmount != null" >
         #{refundAmount,jdbcType=BIGINT},
+      </if>
+      <if test="hisTradeRefundAmount != null" >
+        #{hisTradeRefundAmount,jdbcType=BIGINT},
       </if>
       <if test="bankRefundAmount != null" >
         #{bankRefundAmount,jdbcType=BIGINT},
@@ -298,6 +386,12 @@
       </if>
       <if test="areaCode != null" >
         #{areaCode,jdbcType=INTEGER},
+      </if>
+      <if test="hospitalId != null" >
+        #{hospitalId,jdbcType=BIGINT},
+      </if>
+      <if test="hospitalName != null" >
+        #{hospitalName,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -346,17 +440,41 @@
       <if test="record.tradeCount != null" >
         tradeCount = #{record.tradeCount,jdbcType=INTEGER},
       </if>
+      <if test="record.tradeReceiveCount != null" >
+        tradeReceiveCount = #{record.tradeReceiveCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.tradeRefundCount != null" >
+        tradeRefundCount = #{record.tradeRefundCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.hisTradeReceiveCount != null" >
+        hisTradeReceiveCount = #{record.hisTradeReceiveCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.hisTradeRefundCount != null" >
+        hisTradeRefundCount = #{record.hisTradeRefundCount,jdbcType=INTEGER},
+      </if>
       <if test="record.bankTradeCount != null" >
         bankTradeCount = #{record.bankTradeCount,jdbcType=INTEGER},
       </if>
+      <if test="record.bankTradeReceiveCount != null" >
+        bankTradeReceiveCount = #{record.bankTradeReceiveCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.bankTradeRefundCount != null" >
+        bankTradeRefundCount = #{record.bankTradeRefundCount,jdbcType=INTEGER},
+      </if>
       <if test="record.tradeAmount != null" >
         tradeAmount = #{record.tradeAmount,jdbcType=BIGINT},
+      </if>
+      <if test="record.hisTradeReceiveAmount != null" >
+        hisTradeReceiveAmount = #{record.hisTradeReceiveAmount,jdbcType=BIGINT},
       </if>
       <if test="record.bankTradeAmount != null" >
         bankTradeAmount = #{record.bankTradeAmount,jdbcType=BIGINT},
       </if>
       <if test="record.refundAmount != null" >
         refundAmount = #{record.refundAmount,jdbcType=BIGINT},
+      </if>
+      <if test="record.hisTradeRefundAmount != null" >
+        hisTradeRefundAmount = #{record.hisTradeRefundAmount,jdbcType=BIGINT},
       </if>
       <if test="record.bankRefundAmount != null" >
         bankRefundAmount = #{record.bankRefundAmount,jdbcType=BIGINT},
@@ -385,6 +503,12 @@
       <if test="record.areaCode != null" >
         areaCode = #{record.areaCode,jdbcType=INTEGER},
       </if>
+      <if test="record.hospitalId != null" >
+        hospitalId = #{record.hospitalId,jdbcType=BIGINT},
+      </if>
+      <if test="record.hospitalName != null" >
+        hospitalName = #{record.hospitalName,jdbcType=VARCHAR},
+      </if>
       <if test="record.createTime != null" >
         createTime = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -408,10 +532,18 @@
       mistakeCount = #{record.mistakeCount,jdbcType=INTEGER},
       unhandleMistakeCount = #{record.unhandleMistakeCount,jdbcType=INTEGER},
       tradeCount = #{record.tradeCount,jdbcType=INTEGER},
+      tradeReceiveCount = #{record.tradeReceiveCount,jdbcType=INTEGER},
+      tradeRefundCount = #{record.tradeRefundCount,jdbcType=INTEGER},
+      hisTradeReceiveCount = #{record.hisTradeReceiveCount,jdbcType=INTEGER},
+      hisTradeRefundCount = #{record.hisTradeRefundCount,jdbcType=INTEGER},
       bankTradeCount = #{record.bankTradeCount,jdbcType=INTEGER},
+      bankTradeReceiveCount = #{record.bankTradeReceiveCount,jdbcType=INTEGER},
+      bankTradeRefundCount = #{record.bankTradeRefundCount,jdbcType=INTEGER},
       tradeAmount = #{record.tradeAmount,jdbcType=BIGINT},
+      hisTradeReceiveAmount = #{record.hisTradeReceiveAmount,jdbcType=BIGINT},
       bankTradeAmount = #{record.bankTradeAmount,jdbcType=BIGINT},
       refundAmount = #{record.refundAmount,jdbcType=BIGINT},
+      hisTradeRefundAmount = #{record.hisTradeRefundAmount,jdbcType=BIGINT},
       bankRefundAmount = #{record.bankRefundAmount,jdbcType=BIGINT},
       fee = #{record.fee,jdbcType=BIGINT},
       bankFee = #{record.bankFee,jdbcType=BIGINT},
@@ -421,6 +553,8 @@
       checkFailMsg = #{record.checkFailMsg,jdbcType=VARCHAR},
       bankErrMsg = #{record.bankErrMsg,jdbcType=VARCHAR},
       areaCode = #{record.areaCode,jdbcType=INTEGER},
+      hospitalId = #{record.hospitalId,jdbcType=BIGINT},
+      hospitalName = #{record.hospitalName,jdbcType=VARCHAR},
       createTime = #{record.createTime,jdbcType=TIMESTAMP},
       updateTime = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -457,17 +591,42 @@
       <if test="tradeCount != null" >
         tradeCount = #{tradeCount,jdbcType=INTEGER},
       </if>
+
+      <if test="tradeReceiveCount != null" >
+        tradeReceiveCount = #{tradeReceiveCount,jdbcType=INTEGER},
+      </if>
+      <if test="tradeRefundCount != null" >
+        tradeRefundCount = #{tradeRefundCount,jdbcType=INTEGER},
+      </if>
+      <if test="hisTradeReceiveCount != null" >
+        hisTradeReceiveCount = #{hisTradeReceiveCount,jdbcType=INTEGER},
+      </if>
+      <if test="hisTradeRefundCount != null" >
+        hisTradeRefundCount = #{hisTradeRefundCount,jdbcType=INTEGER},
+      </if>
       <if test="bankTradeCount != null" >
         bankTradeCount = #{bankTradeCount,jdbcType=INTEGER},
       </if>
+      <if test="bankTradeReceiveCount != null" >
+        bankTradeReceiveCount = #{bankTradeReceiveCount,jdbcType=INTEGER},
+      </if>
+      <if test="bankTradeRefundCount != null" >
+        bankTradeRefundCount = #{bankTradeRefundCount,jdbcType=INTEGER},
+      </if>
       <if test="tradeAmount != null" >
         tradeAmount = #{tradeAmount,jdbcType=BIGINT},
+      </if>
+      <if test="hisTradeReceiveAmount != null" >
+        hisTradeReceiveAmount = #{hisTradeReceiveAmount,jdbcType=BIGINT},
       </if>
       <if test="bankTradeAmount != null" >
         bankTradeAmount = #{bankTradeAmount,jdbcType=BIGINT},
       </if>
       <if test="refundAmount != null" >
         refundAmount = #{refundAmount,jdbcType=BIGINT},
+      </if>
+      <if test="hisTradeRefundAmount != null" >
+        hisTradeRefundAmount = #{hisTradeRefundAmount,jdbcType=BIGINT},
       </if>
       <if test="bankRefundAmount != null" >
         bankRefundAmount = #{bankRefundAmount,jdbcType=BIGINT},
@@ -496,6 +655,12 @@
       <if test="areaCode != null" >
         areaCode = #{areaCode,jdbcType=INTEGER},
       </if>
+      <if test="hospitalId != null" >
+        hospitalId = #{hospitalId,jdbcType=BIGINT},
+      </if>
+      <if test="hospitalName != null" >
+        hospitalName = #{hospitalName,jdbcType=VARCHAR},
+      </if>
       <if test="createTime != null" >
         createTime = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -516,10 +681,18 @@
       mistakeCount = #{mistakeCount,jdbcType=INTEGER},
       unhandleMistakeCount = #{unhandleMistakeCount,jdbcType=INTEGER},
       tradeCount = #{tradeCount,jdbcType=INTEGER},
+      tradeReceiveCount = #{tradeReceiveCount,jdbcType=INTEGER},
+      tradeReceiveCount = #{tradeReceiveCount,jdbcType=INTEGER},
+      hisTradeReceiveCount = #{hisTradeReceiveCount,jdbcType=INTEGER},
+      hisTradeRefundCount = #{hisTradeRefundCount,jdbcType=INTEGER},
       bankTradeCount = #{bankTradeCount,jdbcType=INTEGER},
+      bankTradeReceiveCount = #{bankTradeReceiveCount,jdbcType=INTEGER},
+      bankTradeRefundCount = #{bankTradeRefundCount,jdbcType=INTEGER},
       tradeAmount = #{tradeAmount,jdbcType=BIGINT},
+      hisTradeReceiveAmount = #{hisTradeReceiveAmount,jdbcType=BIGINT},
       bankTradeAmount = #{bankTradeAmount,jdbcType=BIGINT},
       refundAmount = #{refundAmount,jdbcType=BIGINT},
+      hisTradeRefundAmount = #{hisTradeRefundAmount,jdbcType=BIGINT},
       bankRefundAmount = #{bankRefundAmount,jdbcType=BIGINT},
       fee = #{fee,jdbcType=BIGINT},
       bankFee = #{bankFee,jdbcType=BIGINT},
@@ -529,6 +702,8 @@
       checkFailMsg = #{checkFailMsg,jdbcType=VARCHAR},
       bankErrMsg = #{bankErrMsg,jdbcType=VARCHAR},
       areaCode = #{areaCode,jdbcType=INTEGER},
+      hospitalId = #{hospitalId,jdbcType=BIGINT},
+      hospitalName = #{hospitalName,jdbcType=VARCHAR},
       createTime = #{createTime,jdbcType=TIMESTAMP},
       updateTime = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}

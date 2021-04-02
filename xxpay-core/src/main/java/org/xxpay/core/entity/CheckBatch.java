@@ -188,8 +188,69 @@ public class CheckBatch implements Serializable {
     /**
      * 行政地区编号， 县
      */
-    @TableField("AreaCode")
+    @TableField("areaCode")
     private Integer areaCode;
+
+    /**
+     * 医院ID
+     */
+    @TableField("hospitalId")
+    private Long hospitalId;
+
+    /**
+     * 医院名称
+     */
+    @TableField("hospitalName")
+    private String hospitalName;
+
+    /**
+     * 平台收款单数
+     */
+    @TableField("tradeReceiveCount")
+    private Integer tradeReceiveCount;
+
+    /**
+     * 平台退款单数
+     */
+    @TableField("tradeRefundCount")
+    private Integer tradeRefundCount;
+
+    /**
+     * his收款单数
+     */
+    @TableField("hisTradeReceiveCount")
+    private Integer hisTradeReceiveCount;
+
+    /**
+     * his退款单数
+     */
+    @TableField("hisTradeRefundCount")
+    private Integer hisTradeRefundCount;
+
+    /**
+     * 银行收款单数
+     */
+    @TableField("bankTradeReceiveCount")
+    private Integer bankTradeReceiveCount;
+
+    /**
+     * 银行退款单数
+     */
+    @TableField("bankTradeRefundCount")
+    private Integer bankTradeRefundCount;
+
+
+    /**
+     * his收款金额
+     */
+    @TableField("hisTradeReceiveAmount")
+    private Long hisTradeReceiveAmount;
+
+    /**
+     * his退款金额
+     */
+    @TableField("hisTradeRefundAmount")
+    private Long hisTradeRefundAmount;
 
     /**
      * 创建时间
@@ -385,6 +446,86 @@ public class CheckBatch implements Serializable {
         this.bankErrMsg = bankErrMsg;
     }
 
+    public Long getHospitalId() {
+        return hospitalId;
+    }
+
+    public void setHospitalId(Long hospitalId) {
+        this.hospitalId = hospitalId;
+    }
+
+    public String getHospitalName() {
+        return hospitalName;
+    }
+
+    public void setHospitalName(String hospitalName) {
+        this.hospitalName = hospitalName;
+    }
+
+    public Integer getTradeReceiveCount() {
+        return tradeReceiveCount;
+    }
+
+    public void setTradeReceiveCount(Integer tradeReceiveCount) {
+        this.tradeReceiveCount = tradeReceiveCount;
+    }
+
+    public Integer getTradeRefundCount() {
+        return tradeRefundCount;
+    }
+
+    public void setTradeRefundCount(Integer tradeRefundCount) {
+        this.tradeRefundCount = tradeRefundCount;
+    }
+
+    public Integer getHisTradeReceiveCount() {
+        return hisTradeReceiveCount;
+    }
+
+    public void setHisTradeReceiveCount(Integer hisTradeReceiveCount) {
+        this.hisTradeReceiveCount = hisTradeReceiveCount;
+    }
+
+    public Integer getHisTradeRefundCount() {
+        return hisTradeRefundCount;
+    }
+
+    public void setHisTradeRefundCount(Integer hisTradeRefundCount) {
+        this.hisTradeRefundCount = hisTradeRefundCount;
+    }
+
+    public Integer getBankTradeReceiveCount() {
+        return bankTradeReceiveCount;
+    }
+
+    public void setBankTradeReceiveCount(Integer bankTradeReceiveCount) {
+        this.bankTradeReceiveCount = bankTradeReceiveCount;
+    }
+
+    public Integer getBankTradeRefundCount() {
+        return bankTradeRefundCount;
+    }
+
+    public void setBankTradeRefundCount(Integer bankTradeRefundCount) {
+        this.bankTradeRefundCount = bankTradeRefundCount;
+    }
+
+    public Long getHisTradeReceiveAmount() {
+        return hisTradeReceiveAmount;
+    }
+
+    public void setHisTradeReceiveAmount(Long hisTradeReceiveAmount) {
+        this.hisTradeReceiveAmount = hisTradeReceiveAmount;
+    }
+
+    public Long getHisTradeRefundAmount() {
+        return hisTradeRefundAmount;
+    }
+
+    public void setHisTradeRefundAmount(Long hisTradeRefundAmount) {
+        this.hisTradeRefundAmount = hisTradeRefundAmount;
+    }
+
     public Date getCreateTime() {
         return createTime;
     }
@@ -466,10 +607,18 @@ public class CheckBatch implements Serializable {
             && (this.getMistakeCount() == null ? other.getMistakeCount() == null : this.getMistakeCount().equals(other.getMistakeCount()))
             && (this.getUnhandleMistakeCount() == null ? other.getUnhandleMistakeCount() == null : this.getUnhandleMistakeCount().equals(other.getUnhandleMistakeCount()))
             && (this.getTradeCount() == null ? other.getTradeCount() == null : this.getTradeCount().equals(other.getTradeCount()))
+            && (this.getTradeReceiveCount() == null ? other.getTradeReceiveCount() == null : this.getTradeCount().equals(other.getTradeCount()))
+            && (this.getTradeRefundCount() == null ? other.getTradeRefundCount() == null : this.getTradeRefundCount().equals(other.getTradeRefundCount()))
+            && (this.getHisTradeReceiveCount() == null ? other.getHisTradeReceiveCount() == null : this.getHisTradeReceiveCount().equals(other.getHisTradeReceiveCount()))
+            && (this.getHisTradeRefundCount() == null ? other.getHisTradeRefundCount() == null : this.getHisTradeRefundCount().equals(other.getHisTradeRefundCount()))
             && (this.getBankTradeCount() == null ? other.getBankTradeCount() == null : this.getBankTradeCount().equals(other.getBankTradeCount()))
+            && (this.getBankTradeReceiveCount() == null ? other.getBankTradeReceiveCount() == null : this.getBankTradeReceiveCount().equals(other.getBankTradeReceiveCount()))
+            && (this.getBankTradeRefundCount() == null ? other.getBankTradeRefundCount() == null : this.getBankTradeRefundCount().equals(other.getBankTradeRefundCount()))
             && (this.getTradeAmount() == null ? other.getTradeAmount() == null : this.getTradeAmount().equals(other.getTradeAmount()))
+            && (this.getHisTradeReceiveAmount() == null ? other.getHisTradeReceiveAmount() == null : this.getHisTradeReceiveAmount().equals(other.getHisTradeReceiveAmount()))
             && (this.getBankTradeAmount() == null ? other.getBankTradeAmount() == null : this.getBankTradeAmount().equals(other.getBankTradeAmount()))
             && (this.getRefundAmount() == null ? other.getRefundAmount() == null : this.getRefundAmount().equals(other.getRefundAmount()))
+            && (this.getHisTradeRefundAmount() == null ? other.getHisTradeRefundAmount() == null : this.getHisTradeRefundAmount().equals(other.getHisTradeRefundAmount()))
             && (this.getBankRefundAmount() == null ? other.getBankRefundAmount() == null : this.getBankRefundAmount().equals(other.getBankRefundAmount()))
             && (this.getFee() == null ? other.getFee() == null : this.getFee().equals(other.getFee()))
             && (this.getBankFee() == null ? other.getBankFee() == null : this.getBankFee().equals(other.getBankFee()))
@@ -479,6 +628,8 @@ public class CheckBatch implements Serializable {
             && (this.getCheckFailMsg() == null ? other.getCheckFailMsg() == null : this.getCheckFailMsg().equals(other.getCheckFailMsg()))
             && (this.getBankErrMsg() == null ? other.getBankErrMsg() == null : this.getBankErrMsg().equals(other.getBankErrMsg()))
             && (this.getAreaCode() == null ? other.getAreaCode() == null : this.getAreaCode().equals(other.getAreaCode()))
+            && (this.getHospitalId() == null ? other.getHospitalId() == null : this.getHospitalId().equals(other.getHospitalId()))
+            && (this.getHospitalName() == null ? other.getHospitalName() == null : this.getHospitalName().equals(other.getHospitalName()))
             && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
             && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
     }
@@ -497,10 +648,18 @@ public class CheckBatch implements Serializable {
         result = prime * result + ((getMistakeCount() == null) ? 0 : getMistakeCount().hashCode());
         result = prime * result + ((getUnhandleMistakeCount() == null) ? 0 : getUnhandleMistakeCount().hashCode());
         result = prime * result + ((getTradeCount() == null) ? 0 : getTradeCount().hashCode());
+        result = prime * result + ((getTradeReceiveCount() == null) ? 0 : getTradeReceiveCount().hashCode());
+        result = prime * result + ((getTradeRefundCount() == null) ? 0 : getTradeRefundCount().hashCode());
+        result = prime * result + ((getHisTradeReceiveCount() == null) ? 0 : getHisTradeReceiveCount().hashCode());
+        result = prime * result + ((getHisTradeRefundCount() == null) ? 0 : getHisTradeRefundCount().hashCode());
         result = prime * result + ((getBankTradeCount() == null) ? 0 : getBankTradeCount().hashCode());
+        result = prime * result + ((getBankTradeReceiveCount() == null) ? 0 : getBankTradeReceiveCount().hashCode());
+        result = prime * result + ((getBankTradeRefundCount() == null) ? 0 : getBankTradeRefundCount().hashCode());
         result = prime * result + ((getTradeAmount() == null) ? 0 : getTradeAmount().hashCode());
+        result = prime * result + ((getHisTradeReceiveAmount() == null) ? 0 : getHisTradeReceiveAmount().hashCode());
         result = prime * result + ((getBankTradeAmount() == null) ? 0 : getBankTradeAmount().hashCode());
         result = prime * result + ((getRefundAmount() == null) ? 0 : getRefundAmount().hashCode());
+        result = prime * result + ((getHisTradeRefundAmount() == null) ? 0 : getHisTradeRefundAmount().hashCode());
         result = prime * result + ((getBankRefundAmount() == null) ? 0 : getBankRefundAmount().hashCode());
         result = prime * result + ((getFee() == null) ? 0 : getFee().hashCode());
         result = prime * result + ((getBankFee() == null) ? 0 : getBankFee().hashCode());
@@ -510,6 +669,8 @@ public class CheckBatch implements Serializable {
         result = prime * result + ((getCheckFailMsg() == null) ? 0 : getCheckFailMsg().hashCode());
         result = prime * result + ((getBankErrMsg() == null) ? 0 : getBankErrMsg().hashCode());
         result = prime * result + ((getAreaCode() == null) ? 0 : getAreaCode().hashCode());
+        result = prime * result + ((getHospitalId() == null) ? 0 : getHospitalId().hashCode());
+        result = prime * result + ((getHospitalName() == null) ? 0 : getHospitalName().hashCode());
         result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
         result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
         return result;

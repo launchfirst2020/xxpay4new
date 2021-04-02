@@ -10,7 +10,6 @@ import org.xxpay.core.common.util.DateUtil;
 import org.xxpay.core.common.util.MyLog;
 import org.xxpay.core.common.util.MySeq;
 import org.xxpay.core.common.util.XXPayUtil;
-import org.xxpay.core.entity.AlipayTradeDetails;
 import org.xxpay.core.entity.ChannelTask;
 import org.xxpay.core.entity.CheckBatch;
 import org.xxpay.core.entity.MchHospital;
@@ -22,7 +21,6 @@ import org.xxpay.task.reconciliation.nc.entity.HospitalBean;
 import org.xxpay.task.reconciliation.service.ReconciliationService;
 import org.xxpay.task.reconciliation.util.SpringUtil;
 
-import javax.annotation.Resource;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +40,7 @@ public class ThirdTardeScheduled {
     @Autowired
     private ReconciliationService reconciliationService;
 
-    //@Scheduled(cron="0 31 17 ? * *")   // 每日10:15执行
+    @Scheduled(cron="0 37 16 ? * *")   // 每日10:15执行
     public void settDailyThirdDetailsTask() {
         _log.info("执行对账,开始...");
 
@@ -65,7 +63,7 @@ public class ThirdTardeScheduled {
             if(StringUtils.isBlank(channelMchId)
                     || StringUtils.isBlank(task.getParam())) continue;
 
-            Date billDate = DateUtil.addDay(new Date(), -29);
+            Date billDate = DateUtil.addDay(new Date(), -31);
             // 检测是否对过账
             boolean checked = reconciliationService.isChecked(channelMchId, billDate);
             if (checked) {

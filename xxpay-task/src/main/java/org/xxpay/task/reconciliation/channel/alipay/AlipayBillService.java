@@ -208,6 +208,11 @@ public class AlipayBillService extends BaseBill {
         if(CollectionUtils.isEmpty(filePathList)) return reconciliationEntityList;
 
         String billDate = DateUtil.date2Str( batch.getBillDate(), DateUtil.FORMAT_YYYY_MM_DD2);
+
+        //银行收款总金额
+        long receiveTradeAmt = 0;
+        //银行退款总金额
+        long refundTradeAmt = 0;
         for(String filePath : filePathList) {
             if(filePath.contains("汇总")) {
                 // 处理汇总数据
@@ -217,12 +222,15 @@ public class AlipayBillService extends BaseBill {
                         List<String> strList = csvList.get(i);
                         if(i > 4 && strList.size() > 10) {
                             if(strList.get(0).contains("合计")) {
-
                                 // 设置批次数据
-                                batch.setBankTradeCount(Integer.parseInt(strList.get(2).trim()));
-                                batch.setBankTradeAmount(new BigDecimal(strList.get(4).trim()).multiply(new BigDecimal(100)).longValue());
-                                batch.setBankRefundAmount(null);
+                                batch.setBankTradeCount(Integer.parseInt(strList.get(2).trim()) + Integer.parseInt(strList.get(3).trim()));
+                                batch.setBankTradeReceiveCount(Integer.parseInt(strList.get(2).trim()));
+                                batch.setBankTradeRefundCount(Integer.parseInt(strList.get(3).trim()));
+                                //batch.setBankTradeAmount(new BigDecimal(strList.get(4).trim()).multiply(new BigDecimal(100)).longValue());
+                                //batch.setBankRefundAmount(null);
                                 batch.setBankFee(new BigDecimal(strList.get(9).trim()).multiply(new BigDecimal(100)).longValue());
+                                batch.setHospitalId(Long.valueOf(hbean.getHospitalId()));
+                                batch.setHospitalName(hbean.getHospitalName());
                                 break;
                             }
                         }
@@ -273,12 +281,22 @@ public class AlipayBillService extends BaseBill {
                             entity.setCreatetime(new Date());
                             entity.setUpdatetime(new Date());
                             reconciliationEntityList.add(entity);
+
+                            if ("交易".equals(strList.get(2).trim()) || convert(strList.get(12).trim()) > 0) {
+                                receiveTradeAmt += convert(strList.get(12).trim());
+                            }
+
+                            if ("退款".equals(strList.get(2).trim()) || convert(strList.get(12).trim()) < 0) {
+                                refundTradeAmt += Math.abs(convert(strList.get(12).trim()));
+                            }
                         }
                     }
                 } catch (IOException e) {
                     _log.error(e, "");
                 }
             }
+            batch.setBankTradeAmount(receiveTradeAmt);
+            batch.setBankRefundAmount(refundTradeAmt);
         }
         return reconciliationEntityList;
     }

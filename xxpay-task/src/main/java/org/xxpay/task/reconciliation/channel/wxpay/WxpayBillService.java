@@ -162,9 +162,15 @@ public class WxpayBillService extends BaseBill {
         batch.setBankTradeAmount(new BigDecimal(wxPayBillResult.getTotalFee().trim()).multiply(new BigDecimal(100)).longValue());
         batch.setBankRefundAmount(new BigDecimal(wxPayBillResult.getTotalRefundFee().trim()).multiply(new BigDecimal(100)).longValue());
         batch.setBankFee(new BigDecimal(wxPayBillResult.getTotalPoundageFee().trim()).multiply(new BigDecimal(100)).longValue());
+        batch.setHospitalId(Long.valueOf(hbean.getHospitalId()));
+        batch.setHospitalName(hbean.getHospitalName());
 
         String billDate = DateUtil.date2Str( batch.getBillDate(), DateUtil.FORMAT_YYYY_MM_DD2);
 
+        //收款记录条数
+        int receiveTradeCnt = 0;
+        //退款记录条数
+        int refundTradeCnt = 0;
         for(WxPayBillInfo info : wxPayBillInfos) {
             WeixinTradeDetails entity = new WeixinTradeDetails();
             // 设置支付时间
@@ -206,7 +212,18 @@ public class WxpayBillService extends BaseBill {
             entity.setCreatetime(new Date());
             entity.setUpdatetime(new Date());
             reconciliationEntityList.add(entity);
+
+            if ("SUCCESS".equals(info.getTradeState().trim())) {
+                receiveTradeCnt += 1;
+            }
+
+            if ("REFUND".equals(info.getTradeState().trim())) {
+                refundTradeCnt += 1;
+            }
         }
+
+        batch.setBankTradeReceiveCount(receiveTradeCnt);
+        batch.setBankTradeRefundCount(refundTradeCnt);
         return reconciliationEntityList;
     }
 
