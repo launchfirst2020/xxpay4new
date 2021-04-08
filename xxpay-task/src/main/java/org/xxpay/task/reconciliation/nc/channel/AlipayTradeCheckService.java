@@ -21,10 +21,6 @@ public class AlipayTradeCheckService implements TradeCheckService {
             return 0;
         }
 
-        //collection.stream()
-        //    .filter(obj -> obj instanceof ScheduleIntervalContainer)
-        //    .map(obj -> (ScheduleIntervalContainer) obj)
-
         List<AlipayTradeDetails> aliDetails = list.stream().filter(c -> c instanceof AlipayTradeDetails).map(c -> (AlipayTradeDetails)c).collect(Collectors.toList());
         int result = rpcCommonService.rpcBankTradeDetailService.insertAlipayBatch(aliDetails);
         return result;
