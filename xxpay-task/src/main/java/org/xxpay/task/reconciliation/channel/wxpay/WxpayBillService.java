@@ -165,7 +165,7 @@ public class WxpayBillService extends BaseBill {
         batch.setHospitalId(Long.valueOf(hbean.getHospitalId()));
         batch.setHospitalName(hbean.getHospitalName());
 
-        String billDate = DateUtil.date2Str( batch.getBillDate(), DateUtil.FORMAT_YYYY_MM_DD2);
+        String billDate = DateUtil.date2Str( batch.getBillDate(), DateUtil.FORMAT_YYYY_MM_DD);
 
         //收款记录条数
         int receiveTradeCnt = 0;
