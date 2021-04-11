@@ -207,7 +207,7 @@ public class AlipayBillService extends BaseBill {
         List<AlipayTradeDetails> reconciliationEntityList = new LinkedList<AlipayTradeDetails>();
         if(CollectionUtils.isEmpty(filePathList)) return reconciliationEntityList;
 
-        String billDate = DateUtil.date2Str( batch.getBillDate(), DateUtil.FORMAT_YYYY_MM_DD2);
+        String billDate = DateUtil.date2Str( batch.getBillDate(), DateUtil.FORMAT_YYYY_MM_DD);
 
         //银行收款总金额
         long receiveTradeAmt = 0;
