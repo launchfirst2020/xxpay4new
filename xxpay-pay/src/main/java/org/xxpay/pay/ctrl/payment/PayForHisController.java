@@ -467,6 +467,7 @@ public class PayForHisController extends BaseController {
             return XxPayResponse.build(RetEnum.RET_COMM_PARAM_ERROR);
         }
 
+        
         MchTradeOrder mchTradeOrder = null;
         if (StringUtils.isNotBlank(mchOrderNo)) {
             mchTradeOrder = rpcCommonService.rpcMchTradeOrderService.findByMchIdAndTradeOrderId(mchId, mchOrderNo);
