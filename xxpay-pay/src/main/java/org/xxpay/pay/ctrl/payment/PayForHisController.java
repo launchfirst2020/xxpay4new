@@ -21,6 +21,8 @@ import org.xxpay.core.entity.*;
 import org.xxpay.pay.channel.PayConfig;
 import org.xxpay.pay.ctrl.common.BaseController;
 import org.xxpay.pay.service.RpcCommonService;
+import org.xxpay.pay.util.Util;
+
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -79,6 +81,11 @@ public class PayForHisController extends BaseController {
 
             if(org.springframework.util.StringUtils.isEmpty(amount) || org.springframework.util.StringUtils.isEmpty(productId) || org.springframework.util.StringUtils.isEmpty(mchOrderNo)){
                 return XxPayResponse.build(RetEnum.RET_HIS_PARAMETER_AMT_AND_PRODUCTID_AND_MCHORDERNO_REQUIRED);
+            }
+
+            //合法金额判断
+            if (!Util.isAmountNumber(amount)) {
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_REFUND_AMOUNT_FORMAT_ERROR);
             }
 
             //金额转换为  分 为单位
@@ -149,16 +156,16 @@ public class PayForHisController extends BaseController {
                 MchTradeOrder updateRecord = new MchTradeOrder();
                 updateRecord.setTradeOrderId(tradeOrderId);
                 updateRecord.setPayOrderId(channelPayOrderId);
-                updateRecord.setStatus(Byte.valueOf(channelOrderStatus));
+                //updateRecord.setStatus(Byte.valueOf(channelOrderStatus));
                 rpcCommonService.rpcMchTradeOrderService.updateById(updateRecord);
                 if ("0".equals(payRes.getRetCode())) {
                     _log.info("{} 下单成功,结果:{}", logPrefix, JSON.toJSONString(payRes));
                 }else {
                     _log.info("{} 下单失败,结果:{}", logPrefix, JSON.toJSONString(payRes));
-
                 }
                 return XxPayResponse.buildSuccess(payRes);
             }else {
+                rpcCommonService.rpcMchTradeOrderService.updateStatus4Fail(tradeOrderId);
                 return XxPayResponse.build(RetEnum.RET_HIS_PAY_BAT_CODE_FAILURE);
             }
         }catch (Exception e) {
@@ -243,6 +250,16 @@ public class PayForHisController extends BaseController {
             String mchRefundNo = requestParams.getString("mchRefundNo");
             String amount = requestParams.getString("amount");
             String refundDesc = requestParams.getString("refundDesc");
+
+            //金额不能为空
+            if (StringUtils.isBlank(amount)) {
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_REFUND_AMOUNT_NO_BLANK);
+            }
+
+            //合法金额判断
+            if (!Util.isAmountNumber(amount)) {
+                return XxPayResponse.build(RetEnum.RET_HIS_MCH_REFUND_AMOUNT_FORMAT_ERROR);
+            }
 
             //金额转换为  分 为单位
             String amountParam = new BigDecimal(amount).multiply(new BigDecimal(100)).setScale(0).toString();
@@ -499,4 +516,6 @@ public class PayForHisController extends BaseController {
         resultMap.put("status", mchRefundOrder.getStatus());
         return XxPayResponse.buildSuccess(resultMap);
     }
+    
+
 }
