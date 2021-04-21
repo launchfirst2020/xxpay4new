@@ -300,7 +300,9 @@ public enum RetEnum {
     RET_HIS_PAY_BAT_CODE_FAILURE(17022, "his调用支付中心【条码支付】下单失败"),
     RET_HIS_MCH_TRADE_ORDER_NO_EXISTS(17023, "商户交易订单不存在"),
     RET_HIS_MCH_REFUND_ORDER_REQUIRED(17024, "商户退款订单号必须输入"),
-    RET_HIS_MCH_REFUND_ORDER_NO_EXISTS(17025, "商户退款订单不存在");
+    RET_HIS_MCH_REFUND_ORDER_NO_EXISTS(17025, "商户退款订单不存在"),
+    RET_HIS_MCH_REFUND_AMOUNT_NO_BLANK(17026, "商户退款金额不能为空"),
+    RET_HIS_MCH_REFUND_AMOUNT_FORMAT_ERROR(17027, "金额格式错误, 最多两位小数");
 
     private int code;
     private String message;
